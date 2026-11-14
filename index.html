@@ -93,9 +93,9 @@ function tbl(h,rows,ft){const c=x=>/^-/.test(x)?' class="bd"':'';return `<div cl
 
 function home(){const{R,E}=agg(),r=sum(R,YM),e=sum(E,YM),p=r-e,[y,m]=YM.split('-').map(Number),n=new Date(y,m,0).getDate();
 let days=0,mx=1;const A=[];for(let i=1;i<=n;i++){const v=R[YM+'-'+z(i)]||0;if(v>0)days++;mx=Math.max(mx,v);A.push(v)}
-const vs=grp(YM,x=>x.v).slice(0,6),fx=grp(YM,x=>catOf(x.v)).filter(a=>a[0]=='固定支出').reduce((s,a)=>s+a[1],0),t=td();
+const vs=grp(YM,x=>x.v).slice(0,6),fx=grp(YM,x=>catOf(x.v)).filter(a=>(a[0]=='固定支出'||a[0]=='雜費'||a[0]=='薪資')).reduce((s,a)=>s+a[1],0),t=td();
 return mn()+`<div class="g"><div class="c"><small>營收</small><b>${f(r)}</b></div><div class="c"><small>支出</small><b>${f(e)}</b></div><div class="c"><small>盈餘</small><b class="${p<0?'bd':'ok'}">${f(p)}</b></div><div class="c"><small>日均營收（${days}天營業）</small><b>${f(days?r/days:0)}</b></div></div>
-<div class="c"><div class="row"><span>支出占營收</span><b>${pc(e,r)}</b></div><div class="row"><span>材料占比（不含固定支出）</span><b>${pc(e-fx,r)}</b></div><div class="row"><span>固定支出（租屋／薪水／瓦斯）占比</span><b>${pc(fx,r)}</b></div><div class="row"><span>今日營收</span><b>${f(R[t]||0)}</b></div></div>
+<div class="c"><div class="row"><span>支出占營收</span><b>${pc(e,r)}</b></div><div class="row"><span>材料占比（不含固定、雜費、薪資）</span><b>${pc(e-fx,r)}</b></div><div class="row"><span>固定支出（租屋／薪水／瓦斯）占比</span><b>${pc(fx,r)}</b></div><div class="row"><span>今日營收</span><b>${f(R[t]||0)}</b></div></div>
 <div class="c"><h3>每日營收</h3><div class="bars">${A.map((v,i)=>`<i style="height:${Math.max(v/mx*100,2)}%" title="${i+1}日 ${f(v)}"></i>`).join('')}</div><div class="row"><small>1日</small><small>${n}日</small></div></div>
 <div class="c"><h3>本月廠商支出前六名</h3>${vs.map(([v,s])=>`<div class="row"><span>${esc(v)}</span><b>${f(s)}</b></div><div class="tk"><u style="width:${s/vs[0][1]*100}%"></u></div>`).join('')||'<p class="mu">本月尚無支出</p>'}</div>`}
 
@@ -161,8 +161,8 @@ function addI(){const n=$('ni').value.trim();if(!n){toast('請輸入品名');ret
 function rep(){const{R,E}=agg(),tb=[['day','每日'],['mon','每月'],['yr','每年']].map(([k,l])=>`<button class="${RT==k?'on':''}" onclick="RT='${k}';render()">${l}</button>`).join('');let b='';
 if(RT=='day'){const ds=[...new Set([...Object.keys(R),...Object.keys(E)])].filter(k=>k.startsWith(YM)).sort();let a=0,c=0,d=0,e=0;
 b=mn()+tbl(['日期','早','晚','營收','支出','盈餘'],ds.map(k=>{const r=D.rev[k]||{},rv=R[k]||0,ex=E[k]||0;a+=+r.m||0;c+=+r.n||0;d+=rv;e+=ex;return[k.slice(5)+'（'+wd(k)+'）',f(r.m||0),f(r.n||0),f(rv),f(ex),f(rv-ex)]}),['合計',f(a),f(c),f(d),f(e),f(d-e)])}
-else if(RT=='mon'){const r=sum(R,YM),e=sum(E,YM),cs=grp(YM,x=>catOf(x.v)),fx=cs.filter(a=>a[0]=='固定支出').reduce((s,a)=>s+a[1],0),Y=YM.slice(0,4),a=sum(R,Y),c=sum(E,Y);
-b=mn()+`<div class="c"><div class="row"><span>營收</span><b>${f(r)}</b></div><div class="row"><span>支出</span><b>${f(e)}</b></div><div class="row"><span>盈餘</span><b>${f(r-e)}</b></div><div class="row"><span>材料占比（不含固定支出）</span><b>${pc(e-fx,r)}</b></div><div class="row"><span>固定支出占比</span><b>${pc(fx,r)}</b></div></div>
+else if(RT=='mon'){const r=sum(R,YM),e=sum(E,YM),cs=grp(YM,x=>catOf(x.v)),fx=cs.filter(a=>(a[0]=='固定支出'||a[0]=='雜費'||a[0]=='薪資')).reduce((s,a)=>s+a[1],0),Y=YM.slice(0,4),a=sum(R,Y),c=sum(E,Y);
+b=mn()+`<div class="c"><div class="row"><span>營收</span><b>${f(r)}</b></div><div class="row"><span>支出</span><b>${f(e)}</b></div><div class="row"><span>盈餘</span><b>${f(r-e)}</b></div><div class="row"><span>材料占比（不含固定、雜費、薪資）</span><b>${pc(e-fx,r)}</b></div><div class="row"><span>固定、雜費、薪資占比</span><b>${pc(fx,r)}</b></div></div>
 <div class="c"><h3>分類支出</h3>${cs.map(([k,s])=>`<div class="row"><span>${k}</span><b>${f(s)} <small>${pc(s,e)}</small></b></div>`).join('')||'<p class="mu">無資料</p>'}</div>
 <div class="c"><h3>廠商支出</h3>${grp(YM,x=>x.v).map(([k,s])=>`<div class="row"><span>${esc(k)}</span><b>${f(s)} <small>${pc(s,e)}</small></b></div>`).join('')||'<p class="mu">無資料</p>'}</div><h3>${Y}年各月</h3>`+
 tbl(['月份','營收','支出','盈餘','盈餘率'],Array.from({length:12},(_,i)=>{const p=Y+'-'+z(i+1),x=sum(R,p),y=sum(E,p);return[(i+1)+'月',f(x),f(y),f(x-y),pc(x-y,x)]}),['全年',f(a),f(c),f(a-c),pc(a-c,a)])}
@@ -205,10 +205,10 @@ const ce=c=>CE[c]||CE['其他'];
 const ico=c=>`<span class="ic" style="background:${ce(c)[1]}26">${ce(c)[0]}</span>`;
 function home(){const{R,E}=agg(),r=sum(R,YM),e=sum(E,YM),p=r-e,[y,m]=YM.split('-').map(Number),n=new Date(y,m,0).getDate();
 let days=0,mx=1;const A=[];for(let i=1;i<=n;i++){const v=R[YM+'-'+z(i)]||0;if(v>0)days++;mx=Math.max(mx,v);A.push(v)}
-const cs=grp(YM,x=>catOf(x.v)),fx=cs.filter(a=>a[0]=='固定支出').reduce((s,a)=>s+a[1],0),vs=grp(YM,x=>x.v).slice(0,6),t=td();
+const cs=grp(YM,x=>catOf(x.v)),fx=cs.filter(a=>(a[0]=='固定支出'||a[0]=='雜費'||a[0]=='薪資')).reduce((s,a)=>s+a[1],0),vs=grp(YM,x=>x.v).slice(0,6),t=td();
 return mn()+`<div class="hero"><small>${y}年${m}月　本月盈餘</small><div class="big">${f(p)}</div><div class="pb"><u style="width:${r?Math.min(e/r*100,100):0}%"></u></div><small>支出占營收 ${pc(e,r)}</small><div class="two"><div><small>營收</small><br><b>${f(r)}</b></div><div><small>支出</small><br><b>${f(e)}</b></div></div></div>
 <div class="act"><button style="background:var(--ok)" onclick="newRec('rev')">＋ 記營收</button><button style="background:var(--bd)" onclick="newRec('exp')">－ 記支出</button></div>
-<div class="g"><div class="c"><small>日均營收（${days}天）</small><b>${f(days?r/days:0)}</b></div><div class="c"><small>今日營收</small><b>${f(R[t]||0)}</b></div><div class="c"><small>材料占比</small><b>${pc(e-fx,r)}</b></div><div class="c"><small>固定支出占比</small><b>${pc(fx,r)}</b></div></div>
+<div class="g"><div class="c"><small>日均營收（${days}天）</small><b>${f(days?r/days:0)}</b></div><div class="c"><small>今日營收</small><b>${f(R[t]||0)}</b></div><div class="c"><small>材料占比</small><b>${pc(e-fx,r)}</b></div><div class="c"><small>固定、雜費、薪資占比</small><b>${pc(fx,r)}</b></div></div>
 <div class="c"><h3>每日營收</h3><div class="bars">${A.map((v,i)=>`<i style="height:${Math.max(v/mx*100,2)}%" title="${i+1}日 ${f(v)}"></i>`).join('')}</div><div class="row" style="border:0;padding-bottom:0"><small>1日</small><small>${n}日</small></div></div>
 <div class="c"><h3>支出分類</h3><div class="stk">${cs.map(([k,s])=>`<i style="flex:${s};background:${ce(k)[1]}"></i>`).join('')}</div>${cs.map(([k,s])=>`<div class="it">${ico(k)}<div class="t"><b>${k}</b><small>${pc(s,e)}</small></div><div class="a">${f(s)}</div></div>`).join('')||'<p class="mu">本月尚無支出</p>'}</div>
 <div class="c"><h3>廠商支出前六名</h3>${vs.map(([v,s])=>`<div class="it">${ico(catOf(v))}<div class="t"><b>${esc(v)}</b><small>${pc(s,e)}</small></div><div class="a">${f(s)}</div></div>`).join('')||'<p class="mu">本月尚無支出</p>'}</div>`}
@@ -340,7 +340,7 @@ async function setup(){const u=$('lu').value.trim(),p=pwn($('lp').value),code=$(
 BUSY=true;let made=false;try{let c;try{c=await FB.createUser(FB.auth,em(u),p);made=true}catch(e){if(e&&e.code=='auth/email-already-in-use'){try{c=await FB.signIn(FB.auth,em(u),p)}catch(x){BUSY=false;toast('這個帳號名稱已被使用且密碼不同。請換一個帳號名稱，或到 Firebase 後台 Authentication 刪除該使用者後重試。');return}}else throw e}await DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin',code:code});await DB.doc('meta/init').set({done:true});await DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin'});INIT=true;
 for(const k in window.__SD)await DB.doc(k).set(window.__SD[k]);SES=c.user.uid;ACC={};ACC[SES]={u:u,role:'admin'};BUSY=false;await enter()}catch(e){if(made)try{await FB.auth.currentUser.delete()}catch(x){}BUSY=false;toast(/permission-denied/.test((e&&e.code)||'')?'設定碼不正確，或尚未在 Firebase 建立設定碼':emsg(e))}}
 async function loadAcc(){const q=await DB.collection('accounts').get();ACC={};q.docs.forEach(d=>ACC[d.id]=d.data())}
-async function enter(){ROLE=ACC[SES].role;CANA=ROLE=='admin';await pull();if(CANA)await loadAcc();V=CANA?'home':'list';$('nav').style.display='';render()}
+async function enter(){ROLE=ACC[SES].role;CANA=ROLE=='admin';await pull();seedMisc();if(CANA)await loadAcc();V=CANA?'home':'list';$('nav').style.display='';render()}
 async function logout(){try{await FB.signOut(FB.auth)}catch(e){}D={rev:{},exp:[],ven:{}};ACC={};IMP=null;SES=null;ROLE=null}
 const nAdm=()=>Object.values(ACC).filter(a=>a.role=='admin').length;
 async function accAdd(){const u=$('na').value.trim(),p=pwn($('nw').value),r=$('nr').value;if(!u||p.length<6){toast('帳號不可空白，密碼至少 6 碼');return}
@@ -352,7 +352,7 @@ l+=Object.entries(ACC).map(([id,a])=>`<div class="c" style="background:var(--bg)
 function pwView(){return `<div class="c"><h2>修改我的密碼</h2><label>新密碼（至少 6 碼）<input id="pw1" type="password" autocomplete="new-password"></label><label>再輸入一次<input id="pw2" type="password" autocomplete="new-password"></label><button class="btn" onclick="chgPw()">更新密碼</button></div>`}
 async function chgPw(){const a=pwn($('pw1').value);if(a.length<6){toast('密碼至少 6 碼');return}if(a!==pwn($('pw2').value)){toast('兩次密碼不一致');return}try{await FB.updatePassword(FB.auth.currentUser,a);toast('密碼已更新，請用新密碼重新登入');setTimeout(logout,1200)}catch(e){toast(emsg(e))}}
 function topbar(){let t='';if(V=='add'&&RET)t='back()';else if(V=='ven'&&VN)t='VN=null;render();scrollTo(0,0)';else if(V=='pw')t="go(ROLE=='admin'?'home':'list')";return t?`<button class="bk" onclick="${t}">‹ 返回</button>`:''}
-const _r0=render;render=function(){_r0();if(SES&&ACC[SES])$('hus').innerHTML+='・<span onclick="go(\'pw\')" style="color:var(--ac);font-weight:700">改密碼</span>'};
+const _r0=render;render=function(){const hx=D.exp,hv=D.ven;if(ROLE&&ROLE!='admin'){D.exp=hx.filter(e=>catOf(e.v)!='薪資');D.ven=Object.fromEntries(Object.entries(hv).filter(([k,v])=>v.c!='薪資'))}try{_r0()}finally{D.exp=hx;D.ven=hv}if(SES&&ACC[SES])$('hus').innerHTML+='・<span onclick="go(\'pw\')" style="color:var(--ac);font-weight:700">改密碼</span>'};
 let DBERR=null;
 async function pickDb(){const F=window.FB,tm=(p,ms)=>Promise.race([p,new Promise((_,j)=>setTimeout(()=>j({code:'timeout'}),ms))]);
 for(const d of F.dbs){F.db=d;try{await tm(F.getDoc(F.doc(d,'meta','init')),7000);return true}catch(e){DBERR=e;if(e&&e.code=='permission-denied')return true}}return false}
@@ -361,5 +361,41 @@ let FORCE=null;
 function setView(){return ``+admCards()+`<div class="c"><h3>備份／還原</h3><p class="mu">資料存在雲端，換手機也是同一份。這裡可以另外複製一份備份文字保存。</p><textarea id="bk" rows="3"></textarea><button class="btn" onclick="bkp()">產生備份文字</button><button class="bt2" onclick="rst()">用上方文字還原</button></div>`}
 function newRec(t){RET={V:V,VN:null,VT:VT,y:scrollY};AT=t;EID=null;TMP={};V='add';VN=null;render();scrollTo(0,0)}
 const _l0=list;list=function(){return `<div class="act"><button style="background:var(--ok)" onclick="newRec('rev')">＋ 記營收</button><button style="background:var(--bd)" onclick="newRec('exp')">－ 記支出</button></div>`+_l0()};
+CATS.splice(CATS.indexOf('其他'),0,'雜費');CE['雜費']=['','#14b8a6'];
+const MISC=['水費','電費','瓦斯費','房租','維修保養','清潔耗材','稅費手續費','交通運費','廣告行銷','其他雜費'];
+function mvVen(f,t){if(!D.ven[f])return false;D.ven[t]=D.ven[t]||D.ven[f];D.ven[t].c='雜費';D.exp.forEach(e=>{if(e.v==f)e.v=t});delete D.ven[f];return true}
+function seedMisc(){let ch=false;if(mvVen('租屋/薪水','房租'))ch=true;if(mvVen('瓦斯','瓦斯費'))ch=true;MISC.forEach(n=>{if(!D.ven[n]){D.ven[n]={c:'雜費',i:[]};ch=true}});if(ch)save()}
+let ET='v';
+const _ae=addE;
+addE=function(){const e=EID?D.exp.find(a=>a.id==EID):null;if(e)ET=catOf(e.v)=='雜費'?'m':'v';
+const b=(k,l)=>`<button class="${ET==k?'on':''}" onclick="ET='${k}';render()">${l}</button>`;
+return (e?'':`<div class="seg">${b('v','廠商進貨')}${b('m','雜費支出')}</div>`)+(ET=='m'?addM(e):_ae())};
+function addM(e){const t=TMP.m||e||{d:td(),v:'',i:'',t:'',k:'',no:''},opts=Object.keys(D.ven).filter(v=>D.ven[v].c=='雜費'),sel=t.v||opts[0]||'';
+return `<div class="c"><label>日期<input type="date" id="md" value="${t.d}"></label><label>雜費項目<select id="mv">${opts.map(v=>`<option${v==sel?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>或新增項目名稱（選填）<input id="mn" placeholder="例：冷氣清洗"></label><label>說明（選填）<input id="mi" value="${esc(t.i==t.v?'':t.i)}" placeholder="例：10月電費"></label><div class="r2"><label>金額<input type="number" step="any" inputmode="decimal" id="mt" value="${t.t}"></label><label>單號／發票<input id="mo" value="${esc(t.no)}"></label></div><label>備註<input id="mk" value="${esc(t.k)}"></label><button class="btn" onclick="saveM()">${e?'更新雜費':'儲存雜費'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
+function saveM(){const v=$('mn').value.trim()||$('mv').value,t=+$('mt').value,d=$('md').value;if(!d||!(t>0)||!v){toast('請填日期、項目與金額');return}
+if(!D.ven[v])D.ven[v]={c:'雜費',i:[]};const o={id:EID||Date.now(),d:d,v:v,i:$('mi').value.trim()||v,q:'',p:'',t:t,k:$('mk').value,c:'',s:'',no:$('mo').value.trim()};
+if(EID){D.exp[D.exp.findIndex(a=>a.id==EID)]=o}else D.exp.push(o);EID=null;TMP={};save();toast('雜費已儲存');if(RET)back();else render()}
+CATS.splice(CATS.indexOf('其他'),0,'薪資');CE['薪資']=['','#8b5cf6'];
+const SALT=['月薪','時薪','加班費','獎金','勞健保','其他'];
+addE=function(){const e=EID?D.exp.find(a=>a.id==EID):null;if(e){const c=catOf(e.v);ET=c=='雜費'?'m':c=='薪資'?'s':'v'}if(ROLE!='admin'&&ET=='s')ET='v';
+const b=(k,l)=>`<button class="${ET==k?'on':''}" onclick="ET='${k}';render()">${l}</button>`;
+return (e?'':`<div class="seg">${b('v','廠商進貨')}${b('m','雜費')}${ROLE=='admin'?b('s','薪資'):''}</div>`)+(ET=='m'?addM(e):ET=='s'?addS(e):_ae())};
+function addS(e){const t=e||{d:td(),v:'',i:'月薪',t:'',k:''},emp=Object.keys(D.ven).filter(v=>D.ven[v].c=='薪資'),sel=t.v||emp[0]||'';
+return `<div class="c"><label>發薪日期<input type="date" id="sd" value="${t.d}"></label><label>員工${emp.length?'':'（目前沒有員工，請在下方輸入姓名）'}<select id="sv">${emp.map(v=>`<option${v==sel?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>或新增員工姓名（選填）<input id="sn" placeholder="例：王小明"></label><div class="r2"><label>薪資項目<select id="si">${SALT.map(x=>`<option${x==t.i?' selected':''}>${x}</option>`).join('')}</select></label><label>金額<input type="number" step="any" inputmode="decimal" id="st" value="${t.t}"></label></div><label>備註（例：10月份）<input id="sk" value="${esc(t.k)}"></label><button class="btn" onclick="saveS()">${e?'更新薪資':'儲存薪資'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
+function saveS(){const v=$('sn').value.trim()||$('sv').value,t=+$('st').value,d=$('sd').value;if(!d||!(t>0)||!v){toast('請填日期、員工與金額');return}
+if(!D.ven[v])D.ven[v]={c:'薪資',i:[]};const o={id:EID||Date.now(),d:d,v:v,i:$('si').value,q:'',p:'',t:t,k:$('sk').value,c:'',s:'',no:''};
+if(EID){D.exp[D.exp.findIndex(a=>a.id==EID)]=o}else D.exp.push(o);EID=null;TMP={};save();toast('薪資已儲存');if(RET)back();else render()}
+let MGT='v';
+const MGN={v:'廠商',m:'雜費項目',s:'薪資員工'};
+function mgNames(k){return Object.keys(D.ven).filter(n=>{const c=D.ven[n].c;return k=='m'?c=='雜費':k=='s'?c=='薪資':(c!='雜費'&&c!='薪資')})}
+function mgCard(){const k=MGT,names=mgNames(k),cats=CATS.filter(c=>c!='雜費'&&c!='薪資'),b=(x)=>`<button class="${MGT==x?'on':''}" onclick="MGT='${x}';render()">${MGN[x]}</button>`;
+return `<div class="c"><h3>資料管理（新增、改名、刪除）</h3><div class="seg" style="box-shadow:none;background:var(--bg)">${b('v')}${b('m')}${b('s')}</div>
+<label>新增${MGN[k]}名稱<input id="mg_${k}" autocomplete="off" placeholder="${k=='v'?'例：新鮮海產行':k=='m'?'例：冷氣清洗':'例：王小明'}"></label>${k=='v'?`<label>分類<select id="mgc">${cats.map(c=>`<option>${c}</option>`).join('')}</select></label>`:''}<button class="btn" onclick="mgAdd('${k}')">新增${MGN[k]}</button>
+<h3 style="margin-top:16px">目前的${MGN[k]}（${names.length}）</h3>${names.map(n=>`<div class="row" style="align-items:center;gap:8px"><input value="${esc(n)}" data-n="${esc(n)}" onchange="mgRen(this)" style="margin:0;flex:1;min-width:0">${k=='v'?`<select data-n="${esc(n)}" style="width:auto;margin:0;padding:8px" onchange="mgCat(this)">${cats.map(c=>`<option${c==D.ven[n].c?' selected':''}>${c}</option>`).join('')}</select>`:''}<button class="x" data-n="${esc(n)}" onclick="two(this,()=>mgDel(this.dataset.n))">刪除</button></div>`).join('')||'<p class="mu">還沒有資料，請在上方新增。</p>'}<small class="mu">名稱可直接修改，歷史紀錄會一起改名。已有紀錄的項目無法刪除。</small></div>`}
+function mgAdd(k){const n=$('mg_'+k).value.trim();if(!n){toast('請輸入名稱');return}if(D.ven[n]){toast('這個名稱已存在');return}D.ven[n]={c:k=='m'?'雜費':k=='s'?'薪資':$('mgc').value,i:[]};save();toast('已新增');render()}
+function mgRen(el){const o=el.dataset.n,n=el.value.trim();if(!n||n==o){render();return}if(D.ven[n]){toast('這個名稱已存在');render();return}D.ven[n]=D.ven[o];delete D.ven[o];D.exp.forEach(e=>{if(e.v==o)e.v=n});save();toast('已改名');render()}
+function mgCat(el){D.ven[el.dataset.n].c=el.value;save();toast('已更新分類')}
+function mgDel(n){if(D.exp.some(e=>e.v==n)){toast('已有紀錄，無法刪除');return}delete D.ven[n];save();toast('已刪除');render()}
+const _sv0=setView;setView=function(){return mgCard()+_sv0()};
 boot();
 </script></body></html>
