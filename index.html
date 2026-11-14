@@ -320,76 +320,24 @@ else l+='<p class="mu">只有 App 擁有者可以新增、刪除帳號或重設�
 function admCards(){const o=admCardsOld();return o.slice(0,o.indexOf('<div class="c"><h3>帳號管理</h3>'))+acctCard()}
 let INIT=false,BUSY=false,SEC=null;
 const em=u=>[...new TextEncoder().encode(u.trim().toLowerCase())].map(b=>b.toString(16).padStart(2,'0')).join('')+'@restaurant.example';
-function emsg(e){const c=(e&&e.code)||'';if(c=='auth/email-already-in-use')return'這個帳號已存在（若曾刪除過，請到 Firebase 後台把該使用者一併刪除）';if(c=='auth/weak-password')return'密碼至少 6 碼';if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return'帳號或密碼錯誤';if(/permission-denied/.test(c))return'沒有權限，請確認 Firestore 規則已貼上並發布';if(c=='auth/too-many-requests')return'嘗試次數過多，請稍後再試';if(/api-key/.test(c))return'Firebase 的 apiKey 設定不正確';if(c=='auth/requires-recent-login')return'請先登出再重新登入後，再修改密碼';if(c=='unavailable'||c=='firestore/unavailable')return'Firebase Firestore 暫時無法連線（unavailable）。請檢查網路、Firestore 服務狀態後重試；帳號不會因此自動刪除。';if(c=='permission-denied'||c=='firestore/permission-denied')return'Firestore 權限不足（permission-denied）。請確認 Rules 已發布，且目前帳號符合管理員／成員條件。';return'發生錯誤：'+(c?(c+(e&&e.message?' — '+e.message:'')):(e&&e.message)||'未知錯誤')}
+function emsg(e){const c=(e&&e.code)||'';if(c=='auth/email-already-in-use')return'這個帳號已存在（若曾刪除過，請到 Firebase 後台把該使用者一併刪除）';if(c=='auth/weak-password')return'密碼至少 6 碼';if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return'帳號或密碼錯誤';if(/permission-denied/.test(c))return'沒有權限，請確認 Firestore 規則已貼上並發布';if(c=='auth/too-many-requests')return'嘗試次數過多，請稍後再試';if(/api-key/.test(c))return'Firebase 的 apiKey 設定不正確';if(c=='auth/requires-recent-login')return'請先登出再重新登入後，再修改密碼';return'發生錯誤：'+(c||(e&&e.message)||'')}
 function mkDB(){const F=window.FB,raw=p=>/^(accounts|meta)(\/|$)/.test(p),ref=p=>F.doc(F.db,...p.split('/'));
 return{doc:p=>({get:async()=>{const s=await F.getDoc(ref(p)),d=s.exists()?s.data():null;return{id:s.id,exists:!!d,data:()=>d?(raw(p)?d:JSON.parse(d.j)):undefined}},set:d=>F.setDoc(ref(p),raw(p)?d:{j:JSON.stringify(d)}),update:d=>F.updateDoc(ref(p),d),delete:()=>F.deleteDoc(ref(p))}),
 collection:c=>({get:async()=>{const q=await F.getDocs(F.collection(F.db,c));return{docs:q.docs.map(x=>({id:x.id,exists:true,data:()=>{const d=x.data();return raw(c)?d:JSON.parse(d.j)}}))}}})}}
-async function boot(){$('nav').style.display='none';$('app').innerHTML='<p class="mu" style="text-align:center;margin-top:60px">正在連線 Firebase…</p>';
-try{
- if(!window.FB)await new Promise((resolve,reject)=>{addEventListener('fb-ready',resolve,{once:true});setTimeout(()=>reject(new Error('Firebase SDK 載入逾時')),15000)});
- DB=mkDB();CANW=true;
- // 讀取初始化狀態失敗時絕不可假裝是首次使用。
- const initSnap=await DB.doc('meta/init').get();INIT=initSnap.exists;
- FB.onAuthStateChanged(FB.auth,async user=>{
-  if(BUSY)return;
-  if(!user){SES=null;ROLE=null;loginUI();return;}
-  try{
-   const account=await DB.doc('accounts/'+user.uid).get();
-   if(!account.exists){await FB.signOut(FB.auth);loginUI('此 Firebase 帳號尚未綁定餐廳管理權限。若這是首次建立失敗留下的帳號，請勿刪除資料，請先確認 Firestore 的 meta/init 與 accounts 文件。');return;}
-   const data=account.data();
-   if(!data||!['admin','staff'].includes(data.role)){await FB.signOut(FB.auth);loginUI('帳號資料不完整或身分設定無效，請聯絡系統管理員。');return;}
-   SES=user.uid;ACC={};ACC[SES]=data;await enter();
-  }catch(e){loginUI('登入後讀取管理員資料失敗：'+emsg(e));}
- });
-}catch(e){$('app').innerHTML='<div class="c"><h2>Firebase 連線／初始化失敗</h2><p class="mu">'+esc(emsg(e))+'</p><p class="mu">系統沒有把連線失敗誤判成第一次使用。請確認網路、Firestore 是否啟用及 Rules 是否已發布，再重新整理。</p><button class="btn" onclick="location.reload()">重新連線</button></div>';}}
+async function boot(){$('nav').style.display='none';$('app').innerHTML='<p class="mu" style="text-align:center;margin-top:60px">載入中…</p>';
+try{if(!window.FB)await new Promise((r,j)=>{addEventListener('fb-ready',r,{once:true});setTimeout(()=>j(new Error('timeout')),15000)});
+DB=mkDB();CANW=true;try{INIT=(await DB.doc('meta/init').get()).exists}catch(e){INIT=false}
+FB.onAuthStateChanged(FB.auth,async u=>{if(BUSY)return;if(!u){SES=null;ROLE=null;loginUI();return}
+try{const a=await DB.doc('accounts/'+u.uid).get();if(!a.exists){await FB.signOut(FB.auth);loginUI('此帳號尚未開通，請聯絡管理員。');return}SES=u.uid;ACC={};ACC[SES]=a.data();await enter()}catch(e){loginUI(emsg(e))}})}
+catch(e){$('app').innerHTML='<div class="c"><h2>連線失敗</h2><p class="mu">無法載入 Firebase，請確認網路後重新整理。</p></div>'}}
 function loginUI(msg){$('nav').style.display='none';$('hbk').innerHTML='';$('hus').innerHTML='';
 const lf=`<div class="c" style="margin-top:20px"><h2>登入</h2><label>帳號<input id="lu" autocomplete="username" autocapitalize="off"></label><label>密碼<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')doLogin()"></label><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" style="width:auto;margin:0" onchange="$('lp').type=this.checked?'text':'password'">顯示密碼</label><button class="btn" onclick="doLogin()">登入</button></div>`,
-sf=`<div class="c" style="margin-top:20px"><h2>建立管理員帳號</h2><p class="mu">首次開通需要 Firebase 後台預先建立的 meta/setup 設定碼。建立過程若中斷，可使用相同帳密重試；程式不會自動刪除可能已有資料的帳號。</p><label>設定碼<input id="lc" type="password" autocomplete="off"></label><label>帳號<input id="lu" autocomplete="off" autocapitalize="off"></label><label>密碼（至少 6 碼）<input id="lp" type="password" autocomplete="new-password"></label><label>再輸入一次密碼<input id="lp2" type="password" autocomplete="new-password"></label><button class="btn" onclick="setup()">建立並登入</button><button class="bt2" onclick="INIT=true;loginUI()">我已經有帳號，改用登入</button></div>`;
+sf=`<div class="c" style="margin-top:20px"><h2>建立管理員帳號</h2><p class="mu">第一次使用，需要「設定碼」才能建立管理員。設定碼由擁有者事先在 Firebase 後台建立，沒有設定碼無法建立。</p><label>設定碼<input id="lc" type="password" autocomplete="off"></label><label>帳號<input id="lu" autocomplete="off" autocapitalize="off"></label><label>密碼（至少 6 碼）<input id="lp" type="password" autocomplete="new-password"></label><label>再輸入一次密碼<input id="lp2" type="password" autocomplete="new-password"></label><button class="btn" onclick="setup()">建立並登入</button><button class="bt2" onclick="INIT=true;loginUI()">我已經有帳號，改用登入</button></div>`;
 $('app').innerHTML=(msg?`<div class="c"><p class="bd">${esc(msg)}</p></div>`:'')+(INIT?lf:sf)}
 async function doLogin(){const u=$('lu').value.trim(),p=$('lp').value;if(!u||!p){toast('請輸入帳號與密碼');return}try{await FB.signIn(FB.auth,em(u),pwn(p))}catch(e){toast(emsg(e))}}
-async function setup(){
- if(BUSY)return;
- const u=$('lu').value.trim(),p=pwn($('lp').value),code=$('lc').value.trim();
- if(!code){toast('請輸入設定碼');return;}if(!u||p.length<6){toast('帳號不可空白，密碼至少 6 碼');return;}if(p!==pwn($('lp2').value)){toast('兩次密碼不一致');return;}
- BUSY=true;let createdAuth=false;
- try{
-  // 再查一次，避免畫面載入後初始化狀態已被其他管理員改變。
-  const initNow=await DB.doc('meta/init').get();
-  let credential;
-  try{credential=await FB.createUser(FB.auth,em(u),p);createdAuth=true;}
-  catch(createErr){if(createErr&&createErr.code==='auth/email-already-in-use')credential=await FB.signIn(FB.auth,em(u),p);else throw createErr;}
-  const uid=credential.user.uid;
-  const accountSnap=await DB.doc('accounts/'+uid).get();
-  if(accountSnap.exists){
-   const existing=accountSnap.data();
-   if(existing.role!=='admin')throw new Error('此登入帳號已存在，但不是管理員；為避免擅自提升權限，系統不會自動修改身分。');
-   // 已有管理員文件時不覆寫帳號資料，也不重設角色。
-  }else{
-   if(initNow.exists)throw new Error('系統已完成首次初始化，但此 Authentication 帳號沒有對應的 accounts 管理員文件。請由既有管理員或 Firebase 專案擁有者修復，不要刪除帳號或資料。');
-   // 由 Firestore Rules 在伺服器端比對 meta/setup.code；前端不讀取設定碼文件。
-   await DB.doc('accounts/'+uid).set({u:u,role:'admin',code:code});
-   // Rules 會先驗證設定碼；建立成功後立即移除設定碼欄位。此時 isAdmin() 已成立。
-   await DB.doc('accounts/'+uid).set({u:u,role:'admin'});
-  }
-  // 只補上不存在的初始文件，絕不覆寫已存在的營收、支出或廠商資料。
-  for(const path of Object.keys(window.__SD||{})){
-   const snap=await DB.doc(path).get();
-   if(!snap.exists)await DB.doc(path).set(window.__SD[path]);
-  }
-  // init 僅在不存在時建立；不對已存在的 init 執行 set/update。
-  const initAfter=await DB.doc('meta/init').get();
-  if(!initAfter.exists)await DB.doc('meta/init').set({done:true,createdAt:new Date().toISOString()});
-  INIT=true;SES=uid;ACC={};ACC[uid]=(await DB.doc('accounts/'+uid).get()).data();
-  BUSY=false;await enter();
- }catch(e){
-  BUSY=false;
-  // 刻意不自動刪除 Authentication 使用者：Firestore 可能已部分寫入，刪除會造成資料孤兒。
-  toast(emsg(e));
-  if(FB.auth.currentUser){try{await FB.signOut(FB.auth)}catch(signoutErr){}}
-  try{const initSnap=await DB.doc('meta/init').get();INIT=initSnap.exists;}catch(readErr){}
-  loginUI('建立流程未完成：'+emsg(e)+'。已保留帳號及現有資料，請依錯誤訊息修復後使用相同帳密重試。');
- }
-}
+async function setup(){const u=$('lu').value.trim(),p=pwn($('lp').value),code=$('lc').value.trim();if(!code){toast('請輸入設定碼');return}if(!u||p.length<6){toast('帳號不可空白，密碼至少 6 碼');return}if(p!==pwn($('lp2').value)){toast('兩次密碼不一致');return}
+BUSY=true;let made=false;try{let c;try{c=await FB.createUser(FB.auth,em(u),p);made=true}catch(e){if(e&&e.code=='auth/email-already-in-use'){try{c=await FB.signIn(FB.auth,em(u),p)}catch(x){BUSY=false;toast('這個帳號名稱已被使用且密碼不同。請換一個帳號名稱，或到 Firebase 後台 Authentication 刪除該使用者後重試。');return}}else throw e}await DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin',code:code});await DB.doc('meta/init').set({done:true});await DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin'});INIT=true;
+for(const k in window.__SD)await DB.doc(k).set(window.__SD[k]);SES=c.user.uid;ACC={};ACC[SES]={u:u,role:'admin'};BUSY=false;await enter()}catch(e){if(made)try{await FB.auth.currentUser.delete()}catch(x){}BUSY=false;toast(/permission-denied/.test((e&&e.code)||'')?'設定碼不正確，或尚未在 Firebase 建立設定碼':emsg(e))}}
 async function loadAcc(){const q=await DB.collection('accounts').get();ACC={};q.docs.forEach(d=>ACC[d.id]=d.data())}
 async function enter(){ROLE=ACC[SES].role;CANA=ROLE=='admin';await pull();if(CANA)await loadAcc();V=CANA?'home':'list';$('nav').style.display='';render()}
 async function logout(){try{await FB.signOut(FB.auth)}catch(e){}D={rev:{},exp:[],ven:{}};ACC={};IMP=null;SES=null;ROLE=null}
