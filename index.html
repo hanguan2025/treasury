@@ -174,7 +174,7 @@ function rst(){try{const o=JSON.parse($('bk').value);if(!o.rev||!o.exp||!o.ven)t
 function rs(){D=JSON.parse(JSON.stringify(SEED));save();toast('已重設');render()}
 
 function render(){if(ROLE&&ROLE!='admin'&&(V=='home'||V=='rep'||V=='set'))V='list';const T={home:home,add:add,list:list,ven:vend,rep:rep,pw:pwView,set:setView};$('app').innerHTML=T[V]();$('hbk').innerHTML=topbar();$('hus').innerHTML=SES&&ACC[SES]?esc(ACC[SES].u)+'（'+(ROLE=='admin'?'管理員':'員工')+'）・<span onclick="logout()" style="color:var(--ac);font-weight:700">登出</span>':'';
-$('nav').innerHTML=[['home','🏠','總覽'],['list','📋','明細'],['add','＋','記帳'],['ven','🏪','廠商'],['rep','📊','報表'],['set','⚙️','設定']].filter(x=>ROLE=='admin'||'list,add,ven'.includes(x[0])).map(([k,i,l])=>`<button class="${V==k?'on':''}${k=='add'?' fab':''}" onclick="go('${k}')"><span>${i}</span>${l}</button>`).join('')}
+$('nav').innerHTML=[['home','🏠','總覽'],['list','📋','明細'],['ven','🏪','廠商'],['rep','📊','報表'],['set','⚙️','設定']].filter(x=>ROLE=='admin'||'list,add,ven'.includes(x[0])).map(([k,i,l])=>`<button class="${V==k?'on':''}${k=='add'?' fab':''}" onclick="go('${k}')"><span>${i}</span>${l}</button>`).join('')}
 let VF='all',VK='';
 function mig(){for(const v in SEED.ven){const t=D.ven[v];if(!t)continue;SEED.ven[v].i.forEach(s=>{const x=t.i.find(i=>i.n==s.n);if(x){if(!x.c&&s.c)x.c=s.c;if(!x.s&&s.s)x.s=s.s}})}
 for(const e of D.exp){const x=((D.ven[e.v]||{}).i||[]).find(i=>i.n==e.i);if(x){if(e.c==null)e.c=x.c||'';if(e.s==null)e.s=x.s||''}}save()}
@@ -207,7 +207,7 @@ function home(){const{R,E}=agg(),r=sum(R,YM),e=sum(E,YM),p=r-e,[y,m]=YM.split('-
 let days=0,mx=1;const A=[];for(let i=1;i<=n;i++){const v=R[YM+'-'+z(i)]||0;if(v>0)days++;mx=Math.max(mx,v);A.push(v)}
 const cs=grp(YM,x=>catOf(x.v)),fx=cs.filter(a=>a[0]=='固定支出').reduce((s,a)=>s+a[1],0),vs=grp(YM,x=>x.v).slice(0,6),t=td();
 return mn()+`<div class="hero"><small>${y}年${m}月　本月盈餘</small><div class="big">${f(p)}</div><div class="pb"><u style="width:${r?Math.min(e/r*100,100):0}%"></u></div><small>支出占營收 ${pc(e,r)}</small><div class="two"><div><small>營收</small><br><b>${f(r)}</b></div><div><small>支出</small><br><b>${f(e)}</b></div></div></div>
-<div class="act"><button style="background:var(--ok)" onclick="AT='rev';go('add')">＋ 記營收</button><button style="background:var(--bd)" onclick="AT='exp';go('add')">－ 記支出</button></div>
+<div class="act"><button style="background:var(--ok)" onclick="newRec('rev')">＋ 記營收</button><button style="background:var(--bd)" onclick="newRec('exp')">－ 記支出</button></div>
 <div class="g"><div class="c"><small>日均營收（${days}天）</small><b>${f(days?r/days:0)}</b></div><div class="c"><small>今日營收</small><b>${f(R[t]||0)}</b></div><div class="c"><small>材料占比</small><b>${pc(e-fx,r)}</b></div><div class="c"><small>固定支出占比</small><b>${pc(fx,r)}</b></div></div>
 <div class="c"><h3>每日營收</h3><div class="bars">${A.map((v,i)=>`<i style="height:${Math.max(v/mx*100,2)}%" title="${i+1}日 ${f(v)}"></i>`).join('')}</div><div class="row" style="border:0;padding-bottom:0"><small>1日</small><small>${n}日</small></div></div>
 <div class="c"><h3>支出分類</h3><div class="stk">${cs.map(([k,s])=>`<i style="flex:${s};background:${ce(k)[1]}"></i>`).join('')}</div>${cs.map(([k,s])=>`<div class="it">${ico(k)}<div class="t"><b>${k}</b><small>${pc(s,e)}</small></div><div class="a">${f(s)}</div></div>`).join('')||'<p class="mu">本月尚無支出</p>'}</div>
@@ -359,5 +359,7 @@ for(const d of F.dbs){F.db=d;try{await tm(F.getDoc(F.doc(d,'meta','init')),7000)
 function showErr(){$('nav').style.display='none';$('app').innerHTML=`<div class="c"><h2>無法連線到雲端資料庫</h2><p class="mu">錯誤代碼：${esc((DBERR&&DBERR.code)||'未知')}。請依序檢查：<br>1. Firebase 的 Firestore Database 已經建立。<br>2. 關閉廣告攔截或 VPN，或換 Chrome、Safari 再試。<br>3. Firestore 的「規則」已貼上並按「發布」。</p><button class="btn" onclick="location.reload()">重新連線</button></div>`}
 let FORCE=null;
 function setView(){return ``+admCards()+`<div class="c"><h3>備份／還原</h3><p class="mu">資料存在雲端，換手機也是同一份。這裡可以另外複製一份備份文字保存。</p><textarea id="bk" rows="3"></textarea><button class="btn" onclick="bkp()">產生備份文字</button><button class="bt2" onclick="rst()">用上方文字還原</button></div>`}
+function newRec(t){RET={V:V,VN:null,VT:VT,y:scrollY};AT=t;EID=null;TMP={};V='add';VN=null;render();scrollTo(0,0)}
+const _l0=list;list=function(){return `<div class="act"><button style="background:var(--ok)" onclick="newRec('rev')">＋ 記營收</button><button style="background:var(--bd)" onclick="newRec('exp')">－ 記支出</button></div>`+_l0()};
 boot();
 </script></body></html>
