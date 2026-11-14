@@ -18,15 +18,15 @@ h1{font-size:22px;margin:18px 4px 12px;font-weight:800}h2{font-size:19px;margin:
 .hero small{color:rgba(255,255,255,.78);font-size:13px}.hero .big{font-size:36px;font-weight:800;line-height:1.2;margin:2px 0 10px}
 .hero .two{display:flex;gap:10px;margin-top:14px}.hero .two div{flex:1;background:rgba(255,255,255,.16);border-radius:14px;padding:10px 12px}.hero b{font-size:18px}
 .pb{height:8px;border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden;margin-bottom:6px}.pb u{display:block;height:100%;background:#fff;border-radius:4px}
-.act{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 12px}.act button{padding:15px;border:0;border-radius:16px;font-size:16px;font-weight:700;color:#fff}
+.act{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 12px}.act button{padding:15px;border:0;border-radius:16px;font-size:16px;font-weight:700;color:#fff;cursor:pointer}
 .ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:20px;flex:none}
 .it{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--ln)}.it:last-child{border:0;padding-bottom:0}
 .it .t{flex:1;min-width:0}.it .t b{display:block;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.it .a{font-weight:700;white-space:nowrap;text-align:right}
 .dh2{display:flex;justify-content:space-between;padding:6px 6px 6px;color:var(--mu);font-size:13px;font-weight:600}
 .stk{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px;margin:0 0 6px}.stk i{display:block}
 .mn{display:flex;align-items:center;justify-content:space-between;background:var(--cd);border-radius:16px;padding:6px;margin:0 0 12px;box-shadow:var(--sh)}.mn b{font-size:17px}
-.mn button{width:46px;height:40px;border:0;background:var(--bg);color:var(--tx);border-radius:12px;font-size:20px}
-.seg{display:flex;gap:4px;background:var(--cd);padding:4px;border-radius:14px;margin:0 0 12px;box-shadow:var(--sh)}.seg button{flex:1;padding:9px 4px;border:0;background:none;color:var(--mu);border-radius:11px;font-size:14px;font-weight:600}
+.mn button{width:46px;height:40px;border:0;background:var(--bg);color:var(--tx);border-radius:12px;font-size:20px;cursor:pointer}
+.seg{display:flex;gap:4px;background:var(--cd);padding:4px;border-radius:14px;margin:0 0 12px;box-shadow:var(--sh)}.seg button{flex:1;padding:9px 4px;border:0;background:none;color:var(--mu);border-radius:11px;font-size:14px;font-weight:600;cursor:pointer}
 .seg .on{background:var(--ac);color:var(--on)}
 label{display:block;font-size:12px;color:var(--mu);margin:0 0 10px;font-weight:600}
 input,select,textarea{display:block;width:100%;margin-top:4px;padding:12px;border:1.5px solid transparent;border-radius:12px;background:var(--bg);color:var(--tx);font-size:16px;font-family:inherit}html{-webkit-text-size-adjust:100%}
@@ -38,16 +38,19 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ac)}
 .row:last-child{border-bottom:0}.row span:first-child{flex:1;min-width:0}.row b{font-size:15px;white-space:nowrap}.dh{padding-top:0}
 .tk{height:6px;border-radius:3px;background:var(--bg);margin:-4px 0 8px}.tk u{display:block;height:100%;border-radius:3px;background:var(--ac)}
 .bars{display:flex;align-items:flex-end;gap:3px;height:96px}.bars i{flex:1;background:var(--ac);border-radius:4px 4px 0 0;opacity:.85}
-.pr{display:flex;align-items:center;gap:6px}.pr input{width:88px;margin:0;padding:8px}.x{border:0;background:none;color:var(--bd);font-size:13px}
+.pr{display:flex;align-items:center;gap:6px}.pr input{width:88px;margin:0;padding:8px}.x{border:0;background:none;color:var(--bd);font-size:13px;cursor:pointer}
 .sc{overflow-x:auto;margin:0 0 12px;border-radius:12px}
 table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
 th{color:var(--mu);font-weight:600;font-size:12px}th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--ln)}
 th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--cd)}tfoot td{font-weight:700}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;background:var(--cd);box-shadow:0 -4px 20px rgba(15,27,45,.08);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
-nav button{flex:1;padding:8px 0 6px;border:0;background:none;color:var(--mu);font-size:11px;font-weight:600}nav button span{display:block;font-size:21px}nav .on{color:var(--ac)}
+nav button{flex:1;padding:8px 0 6px;border:0;background:none;color:var(--mu);font-size:11px;font-weight:600;cursor:pointer}nav button span{display:block;font-size:21px}nav .on{color:var(--ac)}
 nav .fab span{width:54px;height:54px;border-radius:50%;background:var(--ac);color:var(--on);display:grid;place-items:center;margin:-24px auto 2px;font-size:30px;box-shadow:0 6px 16px rgba(15,118,110,.45)}
 #toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:24px;opacity:0;transition:.2s;pointer-events:none;z-index:9}#toast.on{opacity:1}
-.en{padding:14px 0;border-bottom:1px solid var(--ln)}.en:last-child{border:0;padding-bottom:2px}.e1{display:flex;justify-content:space-between;gap:12px;font-size:16px;line-height:1.4}.e1 b{font-size:16px}.e2{color:var(--mu);font-size:13px;margin-top:3px}.e3{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.e3 span{background:var(--bg);border-radius:8px;padding:4px 9px;font-size:12px;color:var(--mu)}.e3 span b{color:var(--tx);font-size:12px;font-weight:600}.fl{margin-top:8px;font-size:12px;font-weight:600}.bk{display:inline-flex;align-items:center;gap:4px;border:0;background:var(--cd);color:var(--ac);font-size:16px;font-weight:700;padding:9px 16px 9px 12px;border-radius:14px;margin:4px 0 12px;box-shadow:var(--sh)}#app>label input{background:var(--cd);box-shadow:var(--sh)}#hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 12px}#hd h1{margin:0}#hd .bk{margin:0}.r2>*,.r3>*{min-width:0}.r2,.r3{gap:12px}input[type=date]{-webkit-appearance:none;appearance:none;min-width:0;height:48px;line-height:1.2}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script type="module">
+.en{padding:14px 0;border-bottom:1px solid var(--ln)}.en:last-child{border:0;padding-bottom:2px}.e1{display:flex;justify-content:space-between;gap:12px;font-size:16px;line-height:1.4}.e1 b{font-size:16px}.e2{color:var(--mu);font-size:13px;margin-top:3px}.e3{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.e3 span{background:var(--bg);border-radius:8px;padding:4px 9px;font-size:12px;color:var(--mu)}.e3 span b{color:var(--tx);font-size:12px;font-weight:600}.fl{margin-top:8px;font-size:12px;font-weight:600}.bk{display:inline-flex;align-items:center;gap:4px;border:0;background:var(--cd);color:var(--ac);font-size:16px;font-weight:700;padding:9px 16px 9px 12px;border-radius:14px;margin:4px 0 12px;box-shadow:var(--sh);cursor:pointer}#app>label input{background:var(--cd);box-shadow:var(--sh)}#hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 12px}#hd h1{margin:0}#hd .bk{margin:0}.r2>*,.r3>*{min-width:0}.r2,.r3{gap:12px}input[type=date]{-webkit-appearance:none;appearance:none;min-width:0;height:48px;line-height:1.2}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged,updatePassword}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import{initializeFirestore,doc,getDoc,setDoc,updateDoc,deleteDoc,collection,getDocs}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -58,16 +61,14 @@ window.FB={cfg,initializeApp,app,auth:getAuth(app),db,getAuth,signIn:signInWithE
 window.dispatchEvent(new Event("fb-ready"));
 </script>
 </head><body>
-<header id="hd"><h1>餐廳營收記帳</h1><span id="hbk"></span></header><div id="hus" class="mu" style="margin:-6px 4px 12px;font-size:13px"></div><main id="app"></main><nav id="nav"></nav><div id="toast"></div>
+<header id="hd"><h1>餐廳營收記帳</h1><span id="hbk"></span></header>
+<div id="hus" class="mu" style="margin:-6px 4px 12px;font-size:13px"></div>
+<main id="app"></main>
+<nav id="nav"></nav>
+<div id="toast"></div>
 <script>
-(function(){if(window.claude&&window.claude.use)return;
-const SD=window.__SD={"ven/all":{"ven":{"鼎宇":{"c":"火鍋料","i":[{"n":"蟹肉棒","u":"","p":65.0,"c":"DF2000-01","s":"松葉蟹腿270g*20盒-金湖"},{"n":"一口魚卵","u":"","p":550.0,"c":"AD0350","s":"一口魚卵3Kg*6包-尚冠"},{"n":"魚旨燒","u":"","p":500.0,"c":"AD0004","s":"魚旨燒3Kg*6包-尚冠"},{"n":"魚板","u":"","p":400.0,"c":"AI1052-01","s":"韓式魚板3Kg*6包-丸楊"},{"n":"豬肉片","u":"","p":420.0,"c":"CA1002-041","s":"豬肉片3Kg(袋裝)*4包-鼎宇"},{"n":"牛肉片","u":"","p":320.0,"c":"CA2005-012","s":"牛五花肉(牛培根美國)1kg*10包-津新"},{"n":"豆腐","u":"","p":12.0,"c":"LA0001","s":"豆腐(嫩)300g*36盒-大漢"},{"n":"鱈魚丸","u":"","p":500.0,"c":"AA0101-02","s":"鱈魚丸3KG*6-宏嘉"},{"n":"燕餃","u":"","p":500.0,"c":"AK003","s":"燕餃(熟)3kg*4包-海霸王"},{"n":"凍豆腐","u":"","p":175.0,"c":"AN0001-03"},{"n":"魚餃","u":"","p":490.0,"c":"AK0001"}]},"小北五金":{"c":"雜貨包材","i":[{"n":"鋼絲球","u":"包","p":62.0,"s":"百利"},{"n":"泡舒","u":"","p":199.0,"s":"泡舒洗潔精"},{"n":"菜單","u":"","p":500.0},{"n":"衛生紙","u":"","p":280.0,"s":"蓁客多"}]},"遠東":{"c":"火鍋料","i":[{"n":"蟹味棒","u":"箱","p":1200,"c":"EJQA132","s":"日式風味蟹味棒 (與遠東/鼎宇一樣)"},{"n":"魚餃","u":"包","p":500,"c":"3130507C5","s":"魚餃-熟(龍)5斤/4包/箱-龍鳳"},{"n":"燕餃","u":"包","p":480,"c":"3130510C5","s":"燕餃-熟(龍)5斤/4包/箱-龍鳳"},{"n":"起司魚豆腐","u":"包","p":520,"c":"FG2018","s":"川口屋魚漿-起司魚豆腐"},{"n":"鱈魚丸","u":"包","p":500,"c":"G004","s":"鱈魚丸-宏嘉A(鮮)5斤/6包/箱"},{"n":"凍豆腐","u":"包","p":240},{"n":"鱸魚片","u":"包","p":750},{"n":"韓式魚板","u":"包","p":500,"c":"GSRVSHGH","s":"魚板-韓式(日)3KG/2包/箱"},{"n":"虱目魚丸","u":"包","p":320,"s":"輝(條狀)"},{"n":"板魚","u":"包","p":530,"s":"北海翅"},{"n":"綠蘋果花","u":"包","p":500},{"n":"海鮮卷切片","u":"包","p":410}]},"明創":{"c":"肉類","i":[{"n":"豬五花片","u":"Kg","p":225.0,"s":"台灣夾心豬五花片"},{"n":"牛五花片","u":"Kg","p":280.0},{"n":"丹麥豬前腿片","u":"Kg","p":150.0,"s":"丹麥豬前腿片0.2*3k 重組"},{"n":"台灣豬前腿肉片","u":"Kg","p":165.0,"s":"台灣豬前腿肉片  重組"}]},"冠洲商行":{"c":"調味乾貨","i":[{"n":"龜甲萬醬油10斤","u":"罐","p":285.0},{"n":"工研醋5L","u":"罐","p":200.0},{"n":"牛寶沙茶醬3Kg/火鍋專用","u":"罐","p":300.0},{"n":"雞蛋","u":"斤","p":38.0},{"n":"烹大師鰹魚味精1Kg","u":"包","p":305.0},{"n":"寶馬粉絲(冬粉)","u":"包","p":320.0},{"n":"特砂","u":"斤","p":20.0},{"n":"上水米30K","u":"袋","p":1270.0,"s":"沙拉油"},{"n":"佛蒙特珈哩/甜","u":"盒","p":95.0},{"n":"高級精鹽1Kg","u":"包","p":18.0},{"n":"仙菓珈哩粉320GM*12(紅)","u":"罐","p":170.0},{"n":"義香香油(金)3L","u":"罐","p":270.0},{"n":"寶華米30K","u":"袋","p":1270.0}]},"蛤蠣":{"c":"海鮮","i":[{"n":"文蛤","u":"台斤","p":95.0,"c":"CLAM02"},{"n":"白蝦(50/60)","u":"盒","p":165.0,"c":"SHRIMP04"}]},"國菜市場-綜合":{"c":"蔬菜","i":[]},"全聯":{"c":"雜貨包材","i":[{"n":"年糕","u":"","p":49.0},{"n":"叻沙醬","u":"","p":41.0},{"n":"金針菇","u":"","p":12.0},{"n":"大韓豆腐","u":"","p":14.0},{"n":"園之味-果汁","u":"","p":73.0}]},"瓦斯":{"c":"固定支出","i":[{"n":"瓦斯","u":"","p":600.0}]},"韓濟大發":{"c":"韓國食材","i":[{"n":"牛肉粉","u":"包","p":230,"c":"K20017","s":"真味-牛肉粉(1Kg*10入)"},{"n":"辣椒粉","u":"包","p":798,"c":"K20003","s":"韓式辣椒粉(細粉)3Kg*8入)-綠帶"},{"n":"不倒翁","u":"箱","p":450,"c":"K20020","s":"不倒翁q拉麵(110g*5包*8入)"},{"n":"清淨園","u":"桶","p":800,"c":"KM0307","s":"清淨園 清正魚露(9Kg)"},{"n":"年糕","u":"包","p":175,"c":"K70033","s":"(冷藏)經濟型年糕條(1.8K*10入)/箱"},{"n":"辣椒粉(細粉)","u":"包","p":760,"c":"K20020","s":"阿里郎辣椒粉(3Kg*8入)(細粉)"},{"n":"拌飯陶鍋","u":"箱","p":1950,"c":"KP0115","s":"拌飯陶鍋-CH7(19.5cm中)/10入"},{"n":"陶鍋","u":"各","p":196,"c":"KP0114","s":"陶鍋-CH5(17.5cm)/10入'"},{"n":"美耐底盤","u":"各","p":65,"c":"KW0105","s":"美耐底盤-5號(外徑:19.5cm)"},{"n":"SAJO辣椒醬","u":"盒","p":360,"c":"K10059","s":"HAEPYO & SAJO辣椒醬"},{"n":"辣椒粉(粗粉)","u":"包","p":798,"c":"K20004","s":"韓式辣椒粉(粗粉)(3Kg*8入)-黃帶"}]},"高欣":{"c":"韓國食材","i":[{"n":"牛肉粉","u":"包","p":175,"s":"真味-牛肉粉(1Kg*10入)"},{"n":"辣椒粉","u":"包","p":798,"s":"韓式辣椒粉(細粉)3Kg*8入)-綠帶"},{"n":"不倒翁","u":"箱","p":450,"s":"不倒翁q拉麵(110g*5包*8入)"},{"n":"清淨園","u":"桶","p":600,"s":"清淨園 清正魚露(9Kg)"},{"n":"年糕","u":"包","p":175,"s":"(冷藏)經濟型年糕條(1.8K*10入)/箱"},{"n":"辣椒粉(細粉)","u":"包","p":760,"s":"阿里郎辣椒粉(3Kg*8入)(細粉)"},{"n":"拌飯陶鍋","u":"箱","p":1950,"s":"拌飯陶鍋-CH7(19.5cm中)/10入"},{"n":"陶鍋","u":"各","p":196,"s":"陶鍋-CH5(17.5cm)/10入'"},{"n":"美耐底盤","u":"各","p":65,"s":"美耐底盤-5號(外徑:19.5cm)"},{"n":"SAJO辣椒醬","u":"盒","p":360,"s":"HAEPYO & SAJO辣椒醬"},{"n":"辣椒粉(粗粉)","u":"包","p":798,"s":"韓式辣椒粉(粗粉)(3Kg*8入)-黃帶"},{"n":"烤肉醬","u":"","p":900}]},"五洋實業-白蝦4號":{"c":"海鮮","i":[{"n":"白蝦4號-厄七星 件/12盒A88 27/1","u":"盒","p":170.0,"c":"B00137"}]},"屏東高麗菜阿成":{"c":"蔬菜","i":[]},"起司":{"c":"調味乾貨","i":[{"n":"起司","u":"條","p":305.0},{"n":"玉米罐-玉兔","u":"箱","p":500.0}]},"餐具行":{"c":"雜貨包材","i":[{"n":"台製 1000紙湯杯","u":"","p":1.7,"c":"600"},{"n":"通用 WV8511紙湯杯蓋","u":"","p":0.85,"c":"600"},{"n":"台製 320紙湯杯","u":"","p":0.9},{"n":"台製 2632#(260/320蓋)","u":"","p":0.4},{"n":"潔輝紙杯200CC","u":"","p":0.4},{"n":"2包袋(真寶島)","u":"","p":17.0},{"n":"瑞旗 A-100水杯","u":"","p":0.6},{"n":"C-75 透明蓋","u":"","p":0.4},{"n":"筷子6*6(孟宗竹)70雙","u":"","p":20.0},{"n":"灣匙(條)","u":"","p":30.0},{"n":"超薄袋 1斤","u":"","p":40.0},{"n":"湯杯袋","u":"","p":15.0},{"n":"鄉親PE袋5X6","u":"","p":40.0},{"n":"HTP 紙905紙湯杯(伴飯用)","u":"","p":1.8,"c":"600"},{"n":"蓋 C-165PP(905)-(澎蓋)","u":"","p":1.8,"c":"600"},{"n":"中式湯匙","u":"","p":50.0}]},"麥茶":{"c":"調味乾貨","i":[{"n":"麥茶","u":"斤","p":30.0}]},"椰奶(公司)":{"c":"調味乾貨","i":[{"n":"椰奶(公司)","u":"箱","p":1032.0}]},"台北天颶":{"c":"調味乾貨","i":[{"n":"原味烤肉醬-10kg","u":"桶","p":850.0},{"n":"辣味烤肉醬-10kg","u":"桶","p":900.0},{"n":"運費","u":"個","p":45.0}]},"岡山辣椒醬":{"c":"調味乾貨","i":[{"n":"岡山辣椒醬","u":"罐","p":170.0}]},"忠孝路":{"c":"韓國食材","i":[{"n":"辣椒粉(粗粉)","u":"包","p":139.0},{"n":"韓式辣椒醬-1","u":"盒","p":49.0}]},"大白菜應急":{"c":"蔬菜","i":[]},"租屋/薪水":{"c":"固定支出","i":[{"n":"租屋/薪水","u":"日","p":1500}]}}},ADM={"u": "admin", "salt": "eaefcc53966660bd5df3815e01745ebe", "hash": "e480077f39e4611412e9b49186796c9c4a2326ba5582dc90a07ef6979c50d921", "role": "admin"},K='rdb:';
-const rd=p=>{try{const s=localStorage.getItem(K+p);return s?JSON.parse(s):null}catch(e){return null}};
-const doc=p=>({id:p.split('/').pop(),path:p,get:async()=>{const d=rd(p);return{id:p.split('/').pop(),exists:!!d,data:()=>d||undefined}},set:async d=>{localStorage.setItem(K+p,JSON.stringify(d))},update:async d=>{localStorage.setItem(K+p,JSON.stringify(Object.assign(rd(p)||{},d)))},delete:async()=>{localStorage.removeItem(K+p)}});
-const col=c=>({get:async()=>{const docs=[],pre=K+c+'/';for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith(pre)){const id=k.slice(pre.length),d=rd(c+'/'+id);if(d&&id.indexOf('/')<0)docs.push({id:id,exists:true,data:()=>d})}}return{docs:docs,size:docs.length,empty:!docs.length}}});
-const U={id:async()=>'local',isOwner:async()=>true,canEdit:async()=>true,can:async()=>true,search:async()=>[],profiles:async()=>({})};
-window.claude={use:async n=>n=='user'?U:n=='db'?{doc:doc,collection:col}:null}})();
-const SEED={"rev":{},"exp":[],"ven":{}};
+const DEFAULT_VEN={"鼎宇":{"c":"火鍋料","i":[{"n":"蟹肉棒","u":"","p":65.0,"c":"DF2000-01","s":"松葉蟹腿270g*20盒-金湖"},{"n":"一口魚卵","u":"","p":550.0,"c":"AD0350","s":"一口魚卵3Kg*6包-尚冠"},{"n":"魚旨燒","u":"","p":500.0,"c":"AD0004","s":"魚旨燒3Kg*6包-尚冠"},{"n":"魚板","u":"","p":400.0,"c":"AI1052-01","s":"韓式魚板3Kg*6包-丸楊"},{"n":"豬肉片","u":"","p":420.0,"c":"CA1002-041","s":"豬肉片3Kg(袋裝)*4包-鼎宇"},{"n":"牛肉片","u":"","p":320.0,"c":"CA2005-012","s":"牛五花肉(牛培根美國)1kg*10包-津新"},{"n":"豆腐","u":"","p":12.0,"c":"LA0001","s":"豆腐(嫩)300g*36盒-大漢"},{"n":"鱈魚丸","u":"","p":500.0,"c":"AA0101-02","s":"鱈魚丸3KG*6-宏嘉"},{"n":"燕餃","u":"","p":500.0,"c":"AK003","s":"燕餃(熟)3kg*4包-海霸王"},{"n":"凍豆腐","u":"","p":175.0,"c":"AN0001-03"},{"n":"魚餃","u":"","p":490.0,"c":"AK0001"}]},"小北五金":{"c":"雜貨包材","i":[{"n":"鋼絲球","u":"包","p":62.0,"s":"百利"},{"n":"泡舒","u":"","p":199.0,"s":"泡舒洗潔精"},{"n":"菜單","u":"","p":500.0},{"n":"衛生紙","u":"","p":280.0,"s":"蓁客多"}]},"遠東":{"c":"火鍋料","i":[{"n":"蟹味棒","u":"箱","p":1200,"c":"EJQA132","s":"日式風味蟹味棒"},{"n":"魚餃","u":"包","p":500,"c":"3130507C5","s":"魚餃-熟(龍)"},{"n":"燕餃","u":"包","p":480,"c":"3130510C5","s":"燕餃-熟(龍)"},{"n":"起司魚豆腐","u":"包","p":520,"c":"FG2018","s":"川口屋魚漿-起司魚豆腐"},{"n":"鱈魚丸","u":"包","p":500,"c":"G004","s":"鱈魚丸-宏嘉A"},{"n":"凍豆腐","u":"包","p":240},{"n":"鱸魚片","u":"包","p":750},{"n":"韓式魚板","u":"包","p":500,"c":"GSRVSHGH","s":"魚板-韓式(日)"},{"n":"虱目魚丸","u":"包","p":320,"s":"輝(條狀)"},{"n":"板魚","u":"包","p":530,"s":"北海翅"},{"n":"綠蘋果花","u":"包","p":500},{"n":"海鮮卷切片","u":"包","p":410}]},"明創":{"c":"肉類","i":[{"n":"豬五花片","u":"Kg","p":225.0,"s":"台灣夾心豬五花片"},{"n":"牛五花片","u":"Kg","p":280.0},{"n":"丹麥豬前腿片","u":"Kg","p":150.0},{"n":"台灣豬前腿肉片","u":"Kg","p":165.0}]},"冠洲商行":{"c":"調味乾貨","i":[{"n":"龜甲萬醬油10斤","u":"罐","p":285.0},{"n":"工研醋5L","u":"罐","p":200.0},{"n":"牛寶沙茶醬3Kg","u":"罐","p":300.0},{"n":"雞蛋","u":"斤","p":38.0},{"n":"烹大師鰹魚味精1Kg","u":"包","p":305.0},{"n":"寶馬粉絲","u":"包","p":320.0},{"n":"特砂","u":"斤","p":20.0},{"n":"上水米30K","u":"袋","p":1270.0},{"n":"佛蒙特珈哩/甜","u":"盒","p":95.0},{"n":"高級精鹽1Kg","u":"包","p":18.0},{"n":"仙菓珈哩粉","u":"罐","p":170.0},{"n":"義香香油3L","u":"罐","p":270.0},{"n":"寶華米30K","u":"袋","p":1270.0}]},"蛤蠣":{"c":"海鮮","i":[{"n":"文蛤","u":"台斤","p":95.0,"c":"CLAM02"},{"n":"白蝦(50/60)","u":"盒","p":165.0,"c":"SHRIMP04"}]},"國菜市場-綜合":{"c":"蔬菜","i":[]},"全聯":{"c":"雜貨包材","i":[{"n":"年糕","u":"","p":49.0},{"n":"叻沙醬","u":"","p":41.0},{"n":"金針菇","u":"","p":12.0},{"n":"大韓豆腐","u":"","p":14.0},{"n":"園之味-果汁","u":"","p":73.0}]},"瓦斯":{"c":"固定支出","i":[{"n":"瓦斯","u":"","p":600.0}]},"韓濟大發":{"c":"韓國食材","i":[{"n":"牛肉粉","u":"包","p":230,"c":"K20017"},{"n":"辣椒粉","u":"包","p":798,"c":"K20003"},{"n":"不倒翁","u":"箱","p":450,"c":"K20020"},{"n":"清淨園","u":"桶","p":800,"c":"KM0307"},{"n":"年糕","u":"包","p":175,"c":"K70033"},{"n":"辣椒粉(細粉)","u":"包","p":760,"c":"K20020"},{"n":"拌飯陶鍋","u":"箱","p":1950,"c":"KP0115"},{"n":"陶鍋","u":"各","p":196,"c":"KP0114"},{"n":"美耐底盤","u":"各","p":65,"c":"KW0105"},{"n":"SAJO辣椒醬","u":"盒","p":360,"c":"K10059"},{"n":"辣椒粉(粗粉)","u":"包","p":798,"c":"K20004"}]},"高欣":{"c":"韓國食材","i":[{"n":"牛肉粉","u":"包","p":175},{"n":"辣椒粉","u":"包","p":798},{"n":"不倒翁","u":"箱","p":450},{"n":"清淨園","u":"桶","p":600},{"n":"年糕","u":"包","p":175},{"n":"辣椒粉(細粉)","u":"包","p":760},{"n":"拌飯陶鍋","u":"箱","p":1950},{"n":"陶鍋","u":"各","p":196},{"n":"美耐底盤","u":"各","p":65},{"n":"SAJO辣椒醬","u":"盒","p":360},{"n":"辣椒粉(粗粉)","u":"包","p":798},{"n":"烤肉醬","u":"","p":900}]},"五洋實業-白蝦4號":{"c":"海鮮","i":[{"n":"白蝦4號","u":"盒","p":170.0,"c":"B00137"}]},"屏東高麗菜阿成":{"c":"蔬菜","i":[]},"起司":{"c":"調味乾貨","i":[{"n":"起司","u":"條","p":305.0},{"n":"玉米罐-玉兔","u":"箱","p":500.0}]},"餐具行":{"c":"雜貨包材","i":[{"n":"台製 1000紙湯杯","u":"","p":1.7},{"n":"通用 WV8511紙湯杯蓋","u":"","p":0.85},{"n":"台製 320紙湯杯","u":"","p":0.9},{"n":"台製 2632#(260/320蓋)","u":"","p":0.4},{"n":"潔輝紙杯200CC","u":"","p":0.4},{"n":"2包袋(真寶島)","u":"","p":17.0},{"n":"瑞旗 A-100水杯","u":"","p":0.6},{"n":"C-75 透明蓋","u":"","p":0.4},{"n":"筷子6*6(孟宗竹)70雙","u":"","p":20.0},{"n":"灣匙(條)","u":"","p":30.0},{"n":"超薄袋 1斤","u":"","p":40.0},{"n":"湯杯袋","u":"","p":15.0},{"n":"鄉親PE袋5X6","u":"","p":40.0},{"n":"HTP 紙905紙湯杯","u":"","p":1.8},{"n":"蓋 C-165PP(905)","u":"","p":1.8},{"n":"中式湯匙","u":"","p":50.0}]},"麥茶":{"c":"調味乾貨","i":[{"n":"麥茶","u":"斤","p":30.0}]},"椰奶(公司)":{"c":"調味乾貨","i":[{"n":"椰奶(公司)","u":"箱","p":1032.0}]},"台北天颶":{"c":"調味乾貨","i":[{"n":"原味烤肉醬-10kg","u":"桶","p":850.0},{"n":"辣味烤肉醬-10kg","u":"桶","p":900.0},{"n":"運費","u":"個","p":45.0}]},"岡山辣椒醬":{"c":"調味乾貨","i":[{"n":"岡山辣椒醬","u":"罐","p":170.0}]},"忠孝路":{"c":"韓國食材","i":[{"n":"辣椒粉(粗粉)","u":"包","p":139.0},{"n":"韓式辣椒醬-1","u":"盒","p":49.0}]},"大白菜應急":{"c":"蔬菜","i":[]},"租屋/薪水":{"c":"固定支出","i":[{"n":"租屋/薪水","u":"日","p":1500}]}};
+
 const WD='日一二三四五六',CATS=['海鮮','肉類','火鍋料','韓國食材','蔬菜','調味乾貨','雜貨包材','固定支出','其他'];
 const $=i=>document.getElementById(i);
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
@@ -76,10 +77,10 @@ const pc=(a,b)=>b?(a/b*100).toFixed(1)+'%':'–';
 const z=n=>String(n).padStart(2,'0');
 function td(){const d=new Date();return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())}
 function wd(d){return WD[new Date(d+'T00:00:00').getDay()]}
-function load(){try{const s=localStorage.getItem('rest_v1');if(s)return JSON.parse(s)}catch(e){}return JSON.parse(JSON.stringify(SEED))}
-function save(){try{localStorage.setItem('rest_v1',JSON.stringify(D))}catch(e){}}
-let D=load(),V='home',YM=td().slice(0,7),FT='all',RT='day',VN=null,AT='rev',EID=null,TMP={},armed=null;
-function toast(m){const t=$('toast');t.textContent=m;t.className='on';setTimeout(()=>t.className='',2500)}
+function withTimeout(p,ms=8000){return Promise.race([p,new Promise((_,r)=>setTimeout(()=>r({code:'unavailable',message:'連線逾時（請確認網路正常）'}),ms))])}
+
+let D={rev:{},exp:[],ven:{}},V='home',YM=td().slice(0,7),FT='all',RT='day',VN=null,AT='rev',EID=null,TMP={},armed=null;
+function toast(m){const t=$('toast');t.textContent=m;t.className='on';setTimeout(()=>t.className='',2800)}
 function two(b,fn){if(armed===b){armed=null;fn()}else{armed=b;const t=b.textContent;b.textContent='再按一次確認';setTimeout(()=>{if(armed===b){armed=null;b.textContent=t}},3000)}}
 const catOf=v=>(D.ven[v]&&D.ven[v].c)||'其他';
 function agg(){const R={},E={};for(const d in D.rev){const r=D.rev[d];R[d]=(+r.m||0)+(+r.n||0)}for(const e of D.exp)E[e.d]=(E[e.d]||0)+(+e.t||0);return{R,E}}
@@ -97,8 +98,9 @@ function readE(){return{d:$('ed').value,v:$('ev').value,i:$('ei').value.trim(),q
 function evc(){TMP.e=readE();TMP.e.i='';TMP.e.p='';TMP.e.t='';TMP.e.c='';TMP.e.s='';render()}
 function ecalc(){const q=+$('eq').value,p=+$('ep').value;if(q&&p)$('et').value=+(q*p).toFixed(2)}
 function eic(){const x=((D.ven[$('ev').value]||{}).i||[]).find(i=>i.n==$('ei').value);if(x){if(x.p)$('ep').value=x.p;$('ec').value=x.c||'';$('es').value=x.s||'';if(!$('eq').value)$('eq').value=1;ecalc()}}
-function addE(){const e=EID?D.exp.find(a=>a.id==EID):null,t=TMP.e||e||{d:td(),v:Object.keys(D.ven)[0],i:'',q:'',p:'',t:'',k:'',c:'',s:'',no:''},it=(D.ven[t.v]&&D.ven[t.v].i)||[];
-return `<div class="c"><label>日期<input type="date" id="ed" value="${t.d}"></label><div class="r2"><label>廠商<select id="ev" onchange="evc()">${Object.keys(D.ven).map(v=>`<option${v==t.v?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>單號（送貨單／發票）<input id="eo" value="${esc(t.no)}"></label></div>
+function addE(){const e=EID?D.exp.find(a=>a.id==EID):null,vs=Object.keys(D.ven),t=TMP.e||e||{d:td(),v:vs[0]||'',i:'',q:'',p:'',t:'',k:'',c:'',s:'',no:''},it=(D.ven[t.v]&&D.ven[t.v].i)||[];
+if(!vs.length)return`<div class="c"><p class="mu">尚未建立任何廠商，請先到「廠商」分頁新增廠商或載入預設廠商。</p></div>`;
+return `<div class="c"><label>日期<input type="date" id="ed" value="${t.d}"></label><div class="r2"><label>廠商<select id="ev" onchange="evc()">${vs.map(v=>`<option${v==t.v?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>單號（送貨單／發票）<input id="eo" value="${esc(t.no)}"></label></div>
 <label>品項（可選清單或自行輸入）<input id="ei" list="il" value="${esc(t.i)}" oninput="eic()" autocomplete="off"><datalist id="il">${it.map(x=>`<option value="${esc(x.n)}">`).join('')}</datalist></label>
 <div class="r2"><label>產品編號<input id="ec" value="${esc(t.c)}"></label><label>品名規格<input id="es" value="${esc(t.s)}"></label></div>
 <div class="r3"><label>數量<input type="number" step="any" inputmode="decimal" id="eq" value="${t.q}" oninput="ecalc()"></label><label>單價<input type="number" step="any" inputmode="decimal" id="ep" value="${t.p}" oninput="ecalc()"></label><label>含稅金額<input type="number" step="any" inputmode="decimal" id="et" value="${t.t}"></label></div>
@@ -112,11 +114,13 @@ EID=null;TMP={};save();toast('支出已儲存'+chg);if(RET)back();else render()}
 
 function vend(){return VN&&D.ven[VN]?vdet2():vlist2()}
 function addV(){const n=$('nv').value.trim();if(!n||D.ven[n]){toast('名稱空白或已存在');return}D.ven[n]={c:$('nc').value,i:[]};VN=n;save();render()}
+function loadDefVen(){D.ven=Object.assign(JSON.parse(JSON.stringify(DEFAULT_VEN)),D.ven);save();toast('已載入預設廠商清單');render()}
 let VT='log',VF='all',VK='';
 function lastD(v){let m='';for(const e of D.exp)if(e.v==v&&e.d>m)m=e.d;return m?m.slice(5):'無'}
 function vf(q){document.querySelectorAll('.vr').forEach(r=>r.style.display=r.dataset.v.includes(q)?'':'none')}
 function vlist2(){const ms={};for(const[v,s]of grp(YM,x=>x.v))ms[v]=s;const tot=Object.values(ms).reduce((a,b)=>a+b,0),by={};for(const v in D.ven)(by[D.ven[v].c]=by[D.ven[v].c]||[]).push(v);
-return mn()+`<div class="g"><div class="c"><small>本月進貨總額</small><b>${f(tot)}</b></div><div class="c"><small>本月有進貨的廠商</small><b>${Object.keys(ms).length}／${Object.keys(D.ven).length} 家</b></div></div><input placeholder="🔍 搜尋廠商" oninput="vf(this.value)" style="margin-bottom:10px">`+
+const emptyBtn=!Object.keys(D.ven).length?`<div class="c"><h3>快速建立廠商</h3><p class="mu">目前尚未有廠商資料，可一鍵載入餐廳常用廠商與品項。</p><button class="btn" onclick="loadDefVen()">一鍵載入預設廠商（22家）</button></div>`:'';
+return mn()+emptyBtn+`<div class="g"><div class="c"><small>本月進貨總額</small><b>${f(tot)}</b></div><div class="c"><small>本月有進貨的廠商</small><b>${Object.keys(ms).length}／${Object.keys(D.ven).length} 家</b></div></div><input placeholder="🔍 搜尋廠商" oninput="vf(this.value)" style="margin-bottom:10px">`+
 CATS.filter(c=>by[c]).map(c=>{const vs=by[c].sort((a,b)=>(ms[b]||0)-(ms[a]||0)),cs=vs.reduce((a,v)=>a+(ms[v]||0),0);return `<div class="c"><div class="dh"><b>${c}（${vs.length}家）</b><span>${f(cs)} <small>${pc(cs,tot)}</small></span></div>`+vs.map(v=>`<div class="vr" data-v="${esc(v)}" onclick="VN=this.dataset.v;VT='log';render();scrollTo(0,0)"><div class="row" style="border:0"><span><b style="font-size:17px">${esc(v)}</b><br><small>${D.ven[v].i.length}項品項・最近進貨 ${lastD(v)}</small></span><span style="text-align:right"><b>${f(ms[v]||0)}</b><br><small>${pc(ms[v]||0,tot)}</small></span></div><div class="tk"><u style="width:${tot?(ms[v]||0)/tot*100:0}%"></u></div></div>`).join('')+'</div>'}).join('')+
 `<div class="c"><h3>新增廠商</h3><label>名稱<input id="nv"></label><label>分類<select id="nc">${CATS.map(c=>`<option>${c}</option>`).join('')}</select></label><button class="btn" onclick="addV()">新增</button></div>`}
 function vdet2(){const v=D.ven[VN],all=D.exp.filter(e=>e.v==VN).sort((a,b)=>b.d.localeCompare(a.d)),mo=all.filter(e=>e.d.startsWith(YM)),ms=mo.reduce((a,e)=>a+e.t,0);
@@ -186,18 +190,20 @@ for(const e of [...all].reverse()){const r=[];if(e.q!==''&&e.p!==''&&e.q!=null&&
 const nb=mo.filter(e=>fl[e.id].length).length,rows=mo.filter(e=>(!VK||[e.no,e.c,e.i,e.s].join(' ').includes(VK))&&(VF=='all'||fl[e.id].length)).sort((a,b)=>a.d.localeCompare(b.d)),days=[...new Set(rows.map(e=>e.d))],un=n=>((v.i.find(x=>x.n==n)||{}).u||'');
 return `<div class="seg"><button class="${VF=='all'?'on':''}" onclick="VF='all';render()">全部（${mo.length}筆）</button><button class="${VF=='all'?'':'on'}" onclick="VF='bad';render()">需核對（${nb}筆）</button></div><label>搜尋單號、產品編號或品名<input value="${esc(VK)}" placeholder="輸入後按 Enter" onchange="VK=this.value.trim();render()"></label><div class="c"><div class="dh" style="border:0;padding:0"><b>${+YM.slice(5)}月進貨合計</b><b>${f(rows.reduce((a,e)=>a+e.t,0))}</b></div><small class="mu">${rows.length}筆・${days.length}天 點任一筆可修改</small></div>`+
 (days.map(d=>{const es=rows.filter(e=>e.d==d);return `<div class="dh2"><span>${d.slice(5)} 週${wd(d)}</span><span>當日 ${f(es.reduce((a,e)=>a+e.t,0))}</span></div><div class="c">${es.map(e=>`<div class="en" onclick="editE(${e.id})"><div class="e1"><b>${esc(e.i)}</b><b>${f(e.t)}</b></div>${e.s?`<div class="e2">${esc(e.s)}</div>`:''}<div class="e3"><span>產品編號 <b>${esc(e.c)||'—'}</b></span><span>單號 <b>${esc(e.no)||'—'}</b></span>${e.q!==''&&e.q!=null?`<span>數量 <b>${esc(e.q)}${esc(un(e.i))}</b></span><span>單價 <b>$${esc(e.p)}</b></span>`:''}</div>${fl[e.id].map(r=>`<div class="fl ${r[0]=='bd'?'bd':'mu'}">${r[0]=='bd'?'⚠ ':''}${r[1]}</div>`).join('')}</div>`).join('')}</div>`}).join('')||'<p class="mu">沒有符合的紀錄</p>')}
+
 let RET=null;
 function back(){const r=RET;RET=null;EID=null;TMP={};if(!r){go('home');return}V=r.V;VN=r.VN;VT=r.VT;render();scrollTo(0,r.y)}
 function editE(id){RET={V:V,VN:VN,VT:VT,y:scrollY};EID=id;TMP={};AT='exp';V='add';VN=null;render();scrollTo(0,0)}
 function editR(d){RET={V:V,VN:VN,VT:VT,y:scrollY};EID=null;TMP={rd:d};AT='rev';V='add';VN=null;render();scrollTo(0,0)}
 function vAdd(){RET={V:'ven',VN:VN,VT:VT,y:scrollY};TMP={e:{d:td(),v:VN,i:'',q:'',p:'',t:'',k:'',c:'',s:'',no:''}};AT='exp';EID=null;V='add';VN=null;render();scrollTo(0,0)}
+
 let ROLE=null,DB=null,CANW=false,LW={},WQ=0,IMP=null;
-function load(){return{rev:{},exp:[],ven:{}}}
 function shards(){const s={'ven/all':{ven:D.ven}},m={},g=k=>m[k]||(m[k]={rev:{},exp:[]});for(const d in D.rev)g(d.slice(0,7)).rev[d]=D.rev[d];for(const e of D.exp)g(e.d.slice(0,7)).exp.push(e);for(const k in m)s['m/'+k]=m[k];return s}
 function save(){if(!DB)return;if(!CANW){toast('目前是唯讀權限，變更不會儲存');return}clearTimeout(WQ);WQ=setTimeout(flush,500)}
-async function flush(){WQ=0;const s=shards();for(const p in s){if(p=='ven/all'&&!Object.keys(D.ven).length)continue;const j=JSON.stringify(s[p]);if(LW[p]!==j){try{await DB.doc(p).set(s[p]);LW[p]=j}catch(e){toast('雲端儲存失敗：'+((e&&e.code)||'請重試'))}}}for(const p in LW)if(!s[p]){try{await DB.doc(p).set({rev:{},exp:[]});delete LW[p]}catch(e){}}}
-async function pull(){const ms=await DB.collection('m').get(),vs=await DB.doc('ven/all').get(),n={rev:{},exp:[],ven:{}};if(vs.exists)n.ven=vs.data().ven||{};ms.docs.forEach(d=>{const x=d.data();Object.assign(n.rev,x.rev||{});(x.exp||[]).forEach(e=>n.exp.push(e))});D=n;LW={};const s=shards();for(const p in s)LW[p]=JSON.stringify(s[p])}
+async function flush(){WQ=0;const s=shards();for(const p in s){if(p=='ven/all'&&!Object.keys(D.ven).length)continue;const j=JSON.stringify(s[p]);if(LW[p]!==j){try{await withTimeout(DB.doc(p).set(s[p]));LW[p]=j}catch(e){toast('雲端儲存失敗：'+((e&&e.code)||'請重試'))}}}for(const p in LW)if(!s[p]){try{await withTimeout(DB.doc(p).set({rev:{},exp:[]}));delete LW[p]}catch(e){}}}
+async function pull(){const ms=await withTimeout(DB.collection('m').get()),vs=await withTimeout(DB.doc('ven/all').get()),n={rev:{},exp:[],ven:{}};if(vs.exists)n.ven=vs.data().ven||{};ms.docs.forEach(d=>{const x=d.data();Object.assign(n.rev,x.rev||{});(x.exp||[]).forEach(e=>n.exp.push(e))});D=n;LW={};const s=shards();for(const p in s)LW[p]=JSON.stringify(s[p])}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&DB&&ROLE&&!WQ&&V!='add'){pull().then(render).catch(()=>{})}});
+
 const nn=x=>{if(typeof x=='number')return x;const v=parseFloat(String(x).replace(/[,\s$]/g,''));return isFinite(v)?v:null};
 function xd(v){if(typeof v=='number'&&v>20000&&v<80000)return new Date(Math.round((v-25569)*864e5)).toISOString().slice(0,10);if(typeof v=='string'){const m=v.match(/(\d{4})[\/\-.年](\d{1,2})[\/\-.月](\d{1,2})/);if(m)return m[1]+'-'+z(+m[2])+'-'+z(+m[3])}return null}
 function parseWB(wb){const R=[],E=[],nv=new Set();
@@ -215,28 +221,32 @@ function impok(){const I=IMP,key=e=>[e.d,e.v,e.i,e.q,e.t,e.no].join('|'),ex=new 
 I.rev.forEach(([d,m,n,k])=>{D.rev[d]={m:m,n:n,k:k}});
 I.exp.forEach(e=>{if(!D.ven[e.v])D.ven[e.v]={c:'其他',i:[]};const it=D.ven[e.v].i.find(x=>x.n==e.i);if(!it)D.ven[e.v].i.push({n:e.i,u:'',p:e.p===''?0:e.p,c:e.c,s:e.s});else{if(!it.c&&e.c)it.c=e.c;if(!it.s&&e.s)it.s=e.s}e.id=id++;if(!ex.has(key(e))){D.exp.push(e);ex.add(key(e));a++}});
 IMP=null;save();toast('已匯入營收 '+I.rev.length+' 天、進貨 '+a+' 筆');render()}
-function admCardsOld(){const pv=IMP?`<div class="c"><h3>匯入預覽</h3><p>營收 ${IMP.rev.length} 天、進貨／支出 ${IMP.exp.length} 筆（合計 ${f(IMP.exp.reduce((a,e)=>a+e.t,0))}）${IMP.nv.length?'<br>將新增廠商：'+IMP.nv.map(esc).join('、'):''}</p><small class="mu">相同日期的營收會被覆蓋；完全重複的進貨會略過。</small><button class="btn" onclick="impok()">確認匯入</button><button class="bt2" onclick="IMP=null;render()">取消</button></div>`:'';
-return `<div class="c"><h3>匯入 Excel</h3><p class="mu">每列一筆。營收檔標題需有：日期、早、晚、備註。進貨檔標題需有：日期、廠商、品項、產品編號、品名規格、數量、單價、含稅金額、單號；沒有「廠商」欄時，會用分頁名稱當廠商。</p><input type="file" accept=".xlsx,.xls,.csv" onchange="impf(this)"></div>${pv}`}
-function admCards(){return admCardsOld()+acctCard()}
+function admCards(){const pv=IMP?`<div class="c"><h3>匯入預覽</h3><p>營收 ${IMP.rev.length} 天、進貨／支出 ${IMP.exp.length} 筆（合計 ${f(IMP.exp.reduce((a,e)=>a+e.t,0))}）${IMP.nv.length?'<br>將新增廠商：'+IMP.nv.map(esc).join('、'):''}</p><small class="mu">相同日期的營收會被覆蓋；完全重複的進貨會略過。</small><button class="btn" onclick="impok()">確認匯入</button><button class="bt2" onclick="IMP=null;render()">取消</button></div>`:'';
+return `<div class="c"><h3>匯入 Excel</h3><p class="mu">每列一筆。營收檔標題需有：日期、早、晚、備註。進貨檔標題需有：日期、廠商、品項、產品編號、品名規格、數量、單價、含稅金額、單號；沒有「廠商」欄時，會用分頁名稱當廠商。</p><input type="file" accept=".xlsx,.xls,.csv" onchange="impf(this)"></div>${pv}`+acctCard()}
+
 let ACC={},SES=null,CANA=false;
 const pwn=s=>String(s).normalize('NFKC').trim();
 let INIT=false,BUSY=false,SEC=null;
 const em=u=>[...new TextEncoder().encode(u.trim().toLowerCase())].map(b=>b.toString(16).padStart(2,'0')).join('')+'@restaurant.example';
-function emsg(e){const c=(e&&e.code)||'';if(c=='unavailable'||/unavailable|offline/i.test((e&&e.message)||''))return'無法連線到 Firebase 資料庫（請確認網路正常，或關閉阻擋廣告/防追蹤外掛後重試）';if(c=='auth/email-already-in-use')return'這個帳號已存在（請改按「我已經有帳號，改用登入」或換一個帳號名稱）';if(c=='auth/weak-password')return'密碼至少 6 碼';if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return'帳號或密碼錯誤';if(/permission-denied/.test(c))return'沒有權限，請確認設定碼正確，或 Firestore 規則已發布';if(c=='auth/too-many-requests')return'嘗試次數過多，請稍後再試';if(/api-key/.test(c))return'Firebase 的 apiKey 設定不正確';if(c=='auth/requires-recent-login')return'請先登出再重新登入後，再修改密碼';return'發生錯誤：'+(c||(e&&e.message)||'')}
+function emsg(e){const c=(e&&e.code)||'';if(c=='unavailable'||/unavailable|offline|逾時/i.test((e&&e.message)||''))return'無法連線到 Firebase 資料庫（請確認網路正常，或關閉阻擋廣告/防追蹤外掛後重試）';if(c=='auth/email-already-in-use')return'這個帳號已存在（請改按「我已經有帳號，改用登入」或換一個帳號名稱）';if(c=='auth/weak-password')return'密碼至少 6 碼';if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return'帳號或密碼錯誤';if(/permission-denied/.test(c))return'沒有權限，請確認設定碼正確，或 Firestore 規則已發布';if(c=='auth/too-many-requests')return'嘗試次數過多，請稍後再試';if(/api-key/.test(c))return'Firebase 的 apiKey 設定不正確';if(c=='auth/requires-recent-login')return'請先登出再重新登入後，再修改密碼';return'發生錯誤：'+(c||(e&&e.message)||'')}
 function mkDB(){const F=window.FB,raw=p=>/^(accounts|meta)(\/|$)/.test(p),ref=p=>F.doc(F.db,...p.split('/'));
 return{doc:p=>({get:async()=>{const s=await F.getDoc(ref(p)),d=s.exists()?s.data():null;return{id:s.id,exists:!!d,data:()=>d?(raw(p)?d:JSON.parse(d.j)):undefined}},set:d=>F.setDoc(ref(p),raw(p)?d:{j:JSON.stringify(d)}),update:d=>F.updateDoc(ref(p),d),delete:()=>F.deleteDoc(ref(p))}),
 collection:c=>({get:async()=>{const q=await F.getDocs(F.collection(F.db,c));return{docs:q.docs.map(x=>({id:x.id,exists:true,data:()=>{const d=x.data();return raw(c)?d:JSON.parse(d.j)}}))}}})}}
+
 async function boot(){$('nav').style.display='none';$('app').innerHTML='<p class="mu" style="text-align:center;margin-top:60px">載入中…</p>';
-try{if(!window.FB)await new Promise((r,j)=>{addEventListener('fb-ready',r,{once:true});setTimeout(()=>j(new Error('timeout')),15000)});
-DB=mkDB();CANW=true;try{INIT=(await DB.doc('meta/init').get()).exists}catch(e){INIT=false}
+try{if(!window.FB)await new Promise((r,j)=>{addEventListener('fb-ready',r,{once:true});setTimeout(()=>j(new Error('timeout')),10000)});
+DB=mkDB();CANW=true;try{INIT=(await withTimeout(DB.doc('meta/init').get(),5000)).exists}catch(e){INIT=false}
 FB.onAuthStateChanged(FB.auth,async u=>{if(BUSY)return;if(!u){SES=null;ROLE=null;loginUI();return}
-try{const a=await DB.doc('accounts/'+u.uid).get();if(!a.exists){await FB.signOut(FB.auth);loginUI('此帳號尚未開通，請輸入設定碼建立管理員，或聯絡管理員。');return}SES=u.uid;ACC={};ACC[SES]=a.data();await enter()}catch(e){loginUI(emsg(e))}})}
+try{const a=await withTimeout(DB.doc('accounts/'+u.uid).get(),8000);if(!a.exists){await FB.signOut(FB.auth);loginUI('此帳號尚未開通，請輸入設定碼建立管理員，或聯絡管理員。');return}SES=u.uid;ACC={};ACC[SES]=a.data();await enter()}catch(e){loginUI(emsg(e))}})}
 catch(e){$('app').innerHTML='<div class="c"><h2>連線失敗</h2><p class="mu">無法載入 Firebase，請確認網路後重新整理。</p></div>'}}
+
 function loginUI(msg){$('nav').style.display='none';$('hbk').innerHTML='';$('hus').innerHTML='';
 const lf=`<div class="c" style="margin-top:20px"><h2>登入</h2><label>帳號<input id="lu" autocomplete="username" autocapitalize="off"></label><label>密碼<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')doLogin()"></label><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" style="width:auto;margin:0" onchange="$('lp').type=this.checked?'text':'password'">顯示密碼</label><button class="btn" id="lbtn" onclick="doLogin()">登入</button><button class="bt2" onclick="INIT=false;loginUI()">‹ 返回建立管理員帳號</button></div>`,
 sf=`<div class="c" style="margin-top:20px"><h2>建立管理員帳號</h2><p class="mu">第一次使用，請輸入「設定碼」，並自行設定管理員的「帳號」與「密碼」（至少6碼）。</p><label>設定碼<input id="lc" type="password" autocomplete="off" placeholder="請輸入後台設定的設定碼"></label><label>帳號（自訂）<input id="lu" autocomplete="off" autocapitalize="off" placeholder="例：boss"></label><label>密碼（自訂，至少 6 碼）<input id="lp" type="password" autocomplete="new-password"></label><label>再輸入一次密碼<input id="lp2" type="password" autocomplete="new-password"></label><button class="btn" id="sbtn" onclick="setup()">建立並登入</button><button class="bt2" onclick="INIT=true;loginUI()">我已經有帳號，改用登入</button></div>`;
 $('app').innerHTML=(msg?`<div class="c"><p class="bd">${esc(msg)}</p></div>`:'')+(INIT?lf:sf)}
-async function doLogin(){const u=$('lu').value.trim(),p=$('lp').value;if(!u||!p){toast('請輸入帳號與密碼');return}const b=$('lbtn');if(b){b.disabled=true;b.textContent='登入中…'}try{await FB.signIn(FB.auth,em(u),pwn(p))}catch(e){if(b){b.disabled=false;b.textContent='登入'}toast(emsg(e))}}
+
+async function doLogin(){const u=$('lu').value.trim(),p=$('lp').value;if(!u||!p){toast('請輸入帳號與密碼');return}const b=$('lbtn');if(b){b.disabled=true;b.textContent='登入中…'}try{await withTimeout(FB.signIn(FB.auth,em(u),pwn(p)),8000)}catch(e){if(b){b.disabled=false;b.textContent='登入'}toast(emsg(e))}}
+
 async function setup(){
 if(BUSY)return;
 const u=$('lu').value.trim(),p=pwn($('lp').value),code=$('lc').value.trim();
@@ -248,16 +258,16 @@ const b=$('sbtn');if(b){b.disabled=true;b.textContent='建立中…'}
 let made=false;
 try{
 let c;
-try{c=await FB.createUser(FB.auth,em(u),p);made=true}
+try{c=await withTimeout(FB.createUser(FB.auth,em(u),p),8000);made=true}
 catch(e){
 if(e&&e.code=='auth/email-already-in-use'){
-try{c=await FB.signIn(FB.auth,em(u),p)}
+try{c=await withTimeout(FB.signIn(FB.auth,em(u),p),8000)}
 catch(x){BUSY=false;if(b){b.disabled=false;b.textContent='建立並登入'}toast('這個帳號名稱已被使用且密碼不同，請換一個帳號名稱（例如 boss）');return}
 }else throw e
 }
-await DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin',code:code});
-await DB.doc('meta/init').set({done:true});
-await DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin'});
+await withTimeout(DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin',code:code}),8000);
+await withTimeout(DB.doc('meta/init').set({done:true}),8000);
+await withTimeout(DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin'}),8000);
 INIT=true;
 SES=c.user.uid;ACC={};ACC[SES]={u:u,role:'admin'};
 BUSY=false;
@@ -268,18 +278,21 @@ BUSY=false;
 if(b){b.disabled=false;b.textContent='建立並登入'}
 toast(/permission-denied/.test((e&&e.code)||'')?'設定碼不正確，或尚未在 Firebase 建立設定碼':emsg(e));
 }}
-async function loadAcc(){const q=await DB.collection('accounts').get();ACC={};q.docs.forEach(d=>ACC[d.id]=d.data())}
+
+async function loadAcc(){const q=await withTimeout(DB.collection('accounts').get(),8000);ACC={};q.docs.forEach(d=>ACC[d.id]=d.data())}
 async function enter(){ROLE=ACC[SES].role;CANA=ROLE=='admin';await pull();if(CANA)await loadAcc();V=CANA?'home':'list';$('nav').style.display='';render()}
 async function logout(){try{await FB.signOut(FB.auth)}catch(e){}D={rev:{},exp:[],ven:{}};ACC={};IMP=null;SES=null;ROLE=null}
 const nAdm=()=>Object.values(ACC).filter(a=>a.role=='admin').length;
 async function accAdd(){const u=$('na').value.trim(),p=pwn($('nw').value),r=$('nr').value;if(!u||p.length<6){toast('帳號不可空白，密碼至少 6 碼');return}
-try{SEC=SEC||FB.initializeApp(FB.cfg,'sec');const sa=FB.getAuth(SEC),c=await FB.createUser(sa,em(u),p);await DB.doc('accounts/'+c.user.uid).set({u:u,role:r});await FB.signOut(sa);await loadAcc();toast('已新增帳號');render()}catch(e){toast(emsg(e))}}
-async function accRole(id,role){if(ACC[id].role=='admin'&&role!='admin'&&nAdm()<2){toast('至少要保留一位管理員');render();return}try{await DB.doc('accounts/'+id).update({role:role});ACC[id].role=role;if(id==SES){ROLE=role;CANA=role=='admin'}toast('已更新');render()}catch(e){toast('無法更新')}}
-async function accDel(id){if(id==SES){toast('不能刪除目前登入的帳號');return}if(ACC[id].role=='admin'&&nAdm()<2){toast('至少要保留一位管理員');render();return}try{await DB.doc('accounts/'+id).delete();delete ACC[id];toast('已移除此帳號的使用權限');render()}catch(e){toast('無法刪除')}}
+try{SEC=SEC||FB.initializeApp(FB.cfg,'sec');const sa=FB.getAuth(SEC),c=await withTimeout(FB.createUser(sa,em(u),p),8000);await withTimeout(DB.doc('accounts/'+c.user.uid).set({u:u,role:r}),8000);await FB.signOut(sa);await loadAcc();toast('已新增帳號');render()}catch(e){toast(emsg(e))}}
+async function accRole(id,role){if(ACC[id].role=='admin'&&role!='admin'&&nAdm()<2){toast('至少要保留一位管理員');render();return}try{await withTimeout(DB.doc('accounts/'+id).update({role:role}),8000);ACC[id].role=role;if(id==SES){ROLE=role;CANA=role=='admin'}toast('已更新');render()}catch(e){toast('無法更新')}}
+async function accDel(id){if(id==SES){toast('不能刪除目前登入的帳號');return}if(ACC[id].role=='admin'&&nAdm()<2){toast('至少要保留一位管理員');render();return}try{await withTimeout(DB.doc('accounts/'+id).delete(),8000);delete ACC[id];toast('已移除此帳號的使用權限');render()}catch(e){toast('無法刪除')}}
 function acctCard(){const me=ACC[SES]||{};let l=`<div class="c"><h3>帳號管理</h3><p class="mu">目前登入：<b>${esc(me.u)}</b>（${ROLE=='admin'?'管理員':'員工'}）</p><button class="bt2" onclick="go('pw')">修改我的密碼</button><button class="bt2" onclick="logout()">登出</button>`;
 l+=Object.entries(ACC).map(([id,a])=>`<div class="c" style="background:var(--bg);box-shadow:none;padding:12px;margin:10px 0 0"><div class="dh" style="border:0;padding:0"><b>${esc(a.u)}</b><span class="pr"><select data-id="${id}" style="width:auto;margin:0;padding:6px" onchange="accRole(this.dataset.id,this.value)"><option value="admin"${a.role=='admin'?' selected':''}>管理員</option><option value="staff"${a.role!='admin'?' selected':''}>員工</option></select><button class="x" data-id="${id}" onclick="two(this,()=>accDel(this.dataset.id))">移除</button></span></div></div>`).join('')+`<h3 style="margin-top:16px">新增帳號</h3><div class="r2"><label>帳號<input id="na" autocomplete="off" autocapitalize="off"></label><label>密碼（至少 6 碼）<input id="nw" type="password" autocomplete="new-password"></label></div><label>身分<select id="nr"><option value="staff">員工（明細、記帳、廠商）</option><option value="admin">管理員（全部功能）</option></select></label><button class="btn" onclick="accAdd()">新增帳號</button><small class="mu">員工忘記密碼時：請到 Firebase 後台 Authentication 刪除該使用者，再回這裡重新新增。</small>`;return l+'</div>'}
 function pwView(){return `<div class="c"><h2>修改我的密碼</h2><label>新密碼（至少 6 碼）<input id="pw1" type="password" autocomplete="new-password"></label><label>再輸入一次<input id="pw2" type="password" autocomplete="new-password"></label><button class="btn" onclick="chgPw()">更新密碼</button></div>`}
-async function chgPw(){const a=pwn($('pw1').value);if(a.length<6){toast('密碼至少 6 碼');return}if(a!==pwn($('pw2').value)){toast('兩次密碼不一致');return}try{await FB.updatePassword(FB.auth.currentUser,a);toast('密碼已更新');go(ROLE=='admin'?'home':'list')}catch(e){toast(emsg(e))}}
+async function chgPw(){const a=pwn($('pw1').value);if(a.length<6){toast('密碼至少 6 碼');return}if(a!==pwn($('pw2').value)){toast('兩次密碼不一致');return}try{await withTimeout(FB.updatePassword(FB.auth.currentUser,a),8000);toast('密碼已更新');go(ROLE=='admin'?'home':'list')}catch(e){toast(emsg(e))}}
 function topbar(){let t='';if(V=='add'&&RET)t='back()';else if(V=='ven'&&VN)t='VN=null;render();scrollTo(0,0)';else if(V=='pw')t="go(ROLE=='admin'?'home':'list')";return t?`<button class="bk" onclick="${t}">‹ 返回</button>`:''}
+
 boot();
-</script></body></html>
+</script>
+</body></html>
