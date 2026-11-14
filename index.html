@@ -397,5 +397,28 @@ function mgRen(el){const o=el.dataset.n,n=el.value.trim();if(!n||n==o){render();
 function mgCat(el){D.ven[el.dataset.n].c=el.value;save();toast('已更新分類')}
 function mgDel(n){if(D.exp.some(e=>e.v==n)){toast('已有紀錄，無法刪除');return}delete D.ven[n];save();toast('已刪除');render()}
 const _sv0=setView;setView=function(){return mgCard()+_sv0()};
+const iso=d=>d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());
+function shards(){const s={'ven/all':{ven:D.ven,rules:D.rules||[]}},m={},g=k=>m[k]||(m[k]={rev:{},exp:[]});for(const d in D.rev)g(d.slice(0,7)).rev[d]=D.rev[d];for(const e of D.exp)g(e.d.slice(0,7)).exp.push(e);for(const k in m)s['m/'+k]=m[k];return s}
+pull=async function(){const ms=await DB.collection('m').get(),vs=await DB.doc('ven/all').get(),n={rev:{},exp:[],ven:{},rules:[]};if(vs.exists){const x=vs.data();n.ven=x.ven||{};n.rules=x.rules||[]}ms.docs.forEach(d=>{const x=d.data();Object.assign(n.rev,x.rev||{});(x.exp||[]).forEach(e=>n.exp.push(e))});D=n;LW={};const s=shards();for(const p in s)LW[p]=JSON.stringify(s[p]);genRules()};
+function due(r,d){if(r.freq=='daily')return true;if(r.freq=='weekly')return d.getDay()==+r.day;const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();return d.getDate()==Math.min(+r.day,last)}
+function genRules(){let n=0;const today=td(),man=new Set(D.exp.filter(e=>!e.rid).map(e=>e.v+'|'+e.d)),have=new Set(D.exp.filter(e=>e.rid).map(e=>e.rid+'|'+e.d));
+for(const r of (D.rules||[])){if(!r.on||!D.ven[r.v])continue;const end=new Date((r.end&&r.end<today?r.end:today)+'T00:00:00');let g=0;
+for(const d=new Date(r.start+'T00:00:00');d<=end&&g<800;d.setDate(d.getDate()+1),g++){const ds=iso(d);if(!due(r,d)||have.has(r.id+'|'+ds)||man.has(r.v+'|'+ds)||(r.skip||[]).includes(ds))continue;
+D.exp.push({id:r.id*1e9+(+ds.replace(/-/g,'')),d:ds,v:r.v,i:r.i||r.v,q:'',p:'',t:+r.amt,k:'自動扣款',c:'',s:'',no:'',rid:r.id});have.add(r.id+'|'+ds);n++}}
+if(n)save();return n}
+function delE(){const e=D.exp.find(a=>a.id==EID);if(e&&e.rid){const r=(D.rules||[]).find(x=>x.id==e.rid);if(r)(r.skip=r.skip||[]).push(e.d)}D.exp=D.exp.filter(a=>a.id!=EID);EID=null;TMP={};save();toast('已刪除');if(RET)back();else render()}
+const WDN=['日','一','二','三','四','五','六'];
+const frTxt=r=>r.freq=='daily'?'每天':r.freq=='weekly'?'每週'+WDN[r.day]:'每月'+r.day+'號';
+function rlf(v){$('rl_wd').style.display=v=='weekly'?'':'none';$('rl_dd').style.display=v=='monthly'?'':'none'}
+function rlCard(){const rs=D.rules||[],opts=CATS.map(c=>{const ns=Object.keys(D.ven).filter(n=>D.ven[n].c==c);return ns.length?`<optgroup label="${c}">${ns.map(n=>`<option>${esc(n)}</option>`).join('')}</optgroup>`:''}).join('');
+return `<div class="c"><h3>固定扣款（自動記帳）</h3><p class="mu">房租、薪水、每月固定費用，設定一次後，系統會依日期自動幫您記一筆支出。</p>${rs.map(r=>`<div class="row" style="align-items:center;gap:8px"><span><b>${esc(r.i)}</b>${r.i!=r.v?`<small>（${esc(r.v)}）</small>`:''}<br><small>${frTxt(r)}　${f(r.amt)}　${r.start}起${r.end?'～'+r.end:''}${r.on?'':'（已暫停）'}</small></span><span class="pr"><button class="x" style="color:var(--ac)" data-id="${r.id}" onclick="rlTog(+this.dataset.id)">${r.on?'暫停':'啟用'}</button><button class="x" data-id="${r.id}" onclick="two(this,()=>rlDel(+this.dataset.id))">刪除</button></span></div>`).join('')||'<p class="mu">還沒有固定扣款。</p>'}
+<h3 style="margin-top:16px">新增固定扣款</h3><label>記到哪個項目（雜費、薪資員工或廠商）<select id="rl_v">${opts}</select></label><label>說明（選填）<input id="rl_i" placeholder="例：店面房租"></label><div class="r2"><label>金額<input id="rl_a" type="number" step="any" inputmode="decimal"></label><label>頻率<select id="rl_f" onchange="rlf(this.value)"><option value="daily">每天</option><option value="weekly">每週</option><option value="monthly">每月</option></select></label></div><label id="rl_wd" style="display:none">星期幾<select id="rl_w">${WDN.map((x,i)=>`<option value="${i}">週${x}</option>`).join('')}</select></label><label id="rl_dd" style="display:none">每月幾號（沒有該日的月份會記在月底）<input id="rl_d" type="number" inputmode="numeric" min="1" max="31" value="1"></label>
+<div class="r2"><label>開始日期<input id="rl_s" type="date" value="${td()}"></label><label>結束日期（選填）<input id="rl_e" type="date"></label></div><button class="btn" onclick="rlAdd()">新增固定扣款</button><small class="mu">開始日期早於今天時，會自動補記到今天。同項目同一天已有紀錄的，會略過不重複記。刪除固定扣款不會刪除已經記好的紀錄。</small></div>`}
+function rlAdd(){const v=$('rl_v').value,a=+$('rl_a').value,fq=$('rl_f').value,s=$('rl_s').value;if(!v||!(a>0)||!s){toast('請選擇項目、填金額與開始日期');return}
+const day=fq=='weekly'?+$('rl_w').value:fq=='monthly'?Math.min(31,Math.max(1,+$('rl_d').value||1)):0;D.rules=D.rules||[];const id=D.rules.reduce((m,r)=>Math.max(m,r.id),0)+1;
+D.rules.push({id:id,v:v,i:$('rl_i').value.trim()||v,amt:a,freq:fq,day:day,start:s,end:$('rl_e').value,on:true,skip:[]});const n=genRules();save();toast('已新增'+(n?'，並補記 '+n+' 筆':''));render()}
+function rlTog(id){const r=D.rules.find(x=>x.id==id);r.on=!r.on;const n=r.on?genRules():0;save();toast(r.on?'已啟用':'已暫停');render()}
+function rlDel(id){D.rules=D.rules.filter(x=>x.id!=id);save();toast('已刪除固定扣款');render()}
+setView=function(){return mgCard()+rlCard()+_sv0()};
 boot();
 </script></body></html>
