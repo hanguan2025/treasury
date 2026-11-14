@@ -32,8 +32,8 @@ label{display:block;font-size:12px;color:var(--mu);margin:0 0 10px;font-weight:6
 input,select,textarea{display:block;width:100%;margin-top:4px;padding:12px;border:1.5px solid transparent;border-radius:12px;background:var(--bg);color:var(--tx);font-size:16px;font-family:inherit}html{-webkit-text-size-adjust:100%}
 input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ac)}
 .r2,.r3{display:grid;gap:10px}.r2{grid-template-columns:1fr 1fr}.r3{grid-template-columns:1fr 1fr 1fr}
-.btn,.bt2{width:100%;padding:14px;border-radius:14px;font-size:16px;font-weight:700;border:0;margin-top:8px}
-.btn{background:var(--ac);color:var(--on)}.bt2{background:var(--bg);color:var(--ac)}
+.btn,.bt2{width:100%;padding:14px;border-radius:14px;font-size:16px;font-weight:700;border:0;margin-top:8px;cursor:pointer}
+.btn{background:var(--ac);color:var(--on)}.btn:disabled{opacity:.6;cursor:not-allowed}.bt2{background:var(--bg);color:var(--ac)}
 .row,.dh{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--ln)}
 .row:last-child{border-bottom:0}.row span:first-child{flex:1;min-width:0}.row b{font-size:15px;white-space:nowrap}.dh{padding-top:0}
 .tk{height:6px;border-radius:3px;background:var(--bg);margin:-4px 0 8px}.tk u{display:block;height:100%;border-radius:3px;background:var(--ac)}
@@ -81,7 +81,7 @@ function wd(d){return WD[new Date(d+'T00:00:00').getDay()]}
 function load(){try{const s=localStorage.getItem('rest_v1');if(s)return JSON.parse(s)}catch(e){}return JSON.parse(JSON.stringify(SEED))}
 function save(){try{localStorage.setItem('rest_v1',JSON.stringify(D))}catch(e){}}
 let D=load(),V='home',YM=td().slice(0,7),FT='all',RT='day',VN=null,AT='rev',EID=null,TMP={},armed=null;
-function toast(m){const t=$('toast');t.textContent=m;t.className='on';setTimeout(()=>t.className='',2200)}
+function toast(m){const t=$('toast');t.textContent=m;t.className='on';setTimeout(()=>t.className='',2500)}
 function two(b,fn){if(armed===b){armed=null;fn()}else{armed=b;const t=b.textContent;b.textContent='再按一次確認';setTimeout(()=>{if(armed===b){armed=null;b.textContent=t}},3000)}}
 const catOf=v=>(D.ven[v]&&D.ven[v].c)||'其他';
 function agg(){const R={},E={};for(const d in D.rev){const r=D.rev[d];R[d]=(+r.m||0)+(+r.n||0)}for(const e of D.exp)E[e.d]=(E[e.d]||0)+(+e.t||0);return{R,E}}
@@ -92,52 +92,30 @@ function mv(n){const[y,m]=YM.split('-').map(Number),t=new Date(y,m-1+n,1);YM=t.g
 function go(v){V=v;VN=null;RET=null;EID=null;render();scrollTo(0,0)}
 function tbl(h,rows,ft){const c=x=>/^-/.test(x)?' class="bd"':'';return `<div class="sc"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td${c(x)}>${x}</td>`).join('')}</tr>`).join('')}</tbody>${ft?`<tfoot><tr>${ft.map(x=>`<td${c(x)}>${x}</td>`).join('')}</tr></tfoot>`:''}</table></div>`}
 
-function home(){const{R,E}=agg(),r=sum(R,YM),e=sum(E,YM),p=r-e,[y,m]=YM.split('-').map(Number),n=new Date(y,m,0).getDate();
-let days=0,mx=1;const A=[];for(let i=1;i<=n;i++){const v=R[YM+'-'+z(i)]||0;if(v>0)days++;mx=Math.max(mx,v);A.push(v)}
-const vs=grp(YM,x=>x.v).slice(0,6),fx=grp(YM,x=>catOf(x.v)).filter(a=>a[0]=='固定支出').reduce((s,a)=>s+a[1],0),t=td();
-return mn()+`<div class="g"><div class="c"><small>營收</small><b>${f(r)}</b></div><div class="c"><small>支出</small><b>${f(e)}</b></div><div class="c"><small>盈餘</small><b class="${p<0?'bd':'ok'}">${f(p)}</b></div><div class="c"><small>日均營收（${days}天營業）</small><b>${f(days?r/days:0)}</b></div></div>
-<div class="c"><div class="row"><span>支出占營收</span><b>${pc(e,r)}</b></div><div class="row"><span>材料占比（不含固定支出）</span><b>${pc(e-fx,r)}</b></div><div class="row"><span>固定支出（租屋／薪水／瓦斯）占比</span><b>${pc(fx,r)}</b></div><div class="row"><span>今日營收</span><b>${f(R[t]||0)}</b></div></div>
-<div class="c"><h3>每日營收</h3><div class="bars">${A.map((v,i)=>`<i style="height:${Math.max(v/mx*100,2)}%" title="${i+1}日 ${f(v)}"></i>`).join('')}</div><div class="row"><small>1日</small><small>${n}日</small></div></div>
-<div class="c"><h3>本月廠商支出前六名</h3>${vs.map(([v,s])=>`<div class="row"><span>${esc(v)}</span><b>${f(s)}</b></div><div class="tk"><u style="width:${s/vs[0][1]*100}%"></u></div>`).join('')||'<p class="mu">本月尚無支出</p>'}</div>`}
-
 function add(){const b=(k,l)=>`<button class="${AT==k?'on':''}" onclick="AT='${k}';render()">${l}</button>`;return `<div class="seg">${b('rev','營收')}${b('exp','支出')}</div>`+(AT=='rev'?addR():addE())}
 function addR(){const d=TMP.rd||td(),r=D.rev[d]||{};return `<div class="c"><label>日期<input type="date" id="rd" value="${d}" onchange="TMP.rd=this.value;render()"></label><div class="r2"><label>早<input type="number" inputmode="numeric" id="rm" value="${r.m==null?'':r.m}"></label><label>晚<input type="number" inputmode="numeric" id="rn" value="${r.n==null?'':r.n}"></label></div><label>備註<input id="rk" value="${esc(r.k)}" placeholder="例：颱風、有事休息"></label><button class="btn" onclick="saveR()">儲存營收</button>${D.rev[d]?'<p class="mu">這天已有紀錄，儲存會覆蓋。</p>':''}</div>`}
 function saveR(){const d=$('rd').value;if(!d)return;D.rev[d]={m:+$('rm').value||0,n:+$('rn').value||0,k:$('rk').value};TMP={};save();toast('營收已儲存');if(RET)back();else render()}
-function addE(){const e=EID?D.exp.find(a=>a.id==EID):null,t=TMP.e||e||{d:td(),v:Object.keys(D.ven)[0],i:'',q:'',p:'',t:'',k:''},it=(D.ven[t.v]&&D.ven[t.v].i)||[];
-return `<div class="c"><label>日期<input type="date" id="ed" value="${t.d}"></label><label>廠商<select id="ev" onchange="evc()">${Object.keys(D.ven).map(v=>`<option${v==t.v?' selected':''}>${esc(v)}</option>`).join('')}</select></label>
-<label>品項（可選清單或自行輸入）<input id="ei" list="il" value="${esc(t.i)}" oninput="eic()" autocomplete="off"><datalist id="il">${it.map(x=>`<option value="${esc(x.n)}">`).join('')}</datalist></label>
-<div class="r3"><label>數量<input type="number" step="any" inputmode="decimal" id="eq" value="${t.q}" oninput="ecalc()"></label><label>單價<input type="number" step="any" inputmode="decimal" id="ep" value="${t.p}" oninput="ecalc()"></label><label>金額<input type="number" step="any" inputmode="decimal" id="et" value="${t.t}"></label></div>
-<label>備註<input id="ek" value="${esc(t.k)}"></label><button class="btn" onclick="saveE()">${e?'更新支出':'儲存支出'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
-function readE(){return{d:$('ed').value,v:$('ev').value,i:$('ei').value.trim(),q:$('eq').value,p:$('ep').value,t:$('et').value,k:$('ek').value}}
-function evc(){TMP.e=readE();TMP.e.i='';TMP.e.p='';TMP.e.t='';render()}
+function readE(){return{d:$('ed').value,v:$('ev').value,i:$('ei').value.trim(),q:$('eq').value,p:$('ep').value,t:$('et').value,k:$('ek').value,c:$('ec').value.trim(),s:$('es').value.trim(),no:$('eo').value.trim()}}
+function evc(){TMP.e=readE();TMP.e.i='';TMP.e.p='';TMP.e.t='';TMP.e.c='';TMP.e.s='';render()}
 function ecalc(){const q=+$('eq').value,p=+$('ep').value;if(q&&p)$('et').value=+(q*p).toFixed(2)}
-function eic(){const x=((D.ven[$('ev').value]||{}).i||[]).find(i=>i.n==$('ei').value);if(x){if(x.p)$('ep').value=x.p;if(!$('eq').value)$('eq').value=1;ecalc()}}
+function eic(){const x=((D.ven[$('ev').value]||{}).i||[]).find(i=>i.n==$('ei').value);if(x){if(x.p)$('ep').value=x.p;$('ec').value=x.c||'';$('es').value=x.s||'';if(!$('eq').value)$('eq').value=1;ecalc()}}
+function addE(){const e=EID?D.exp.find(a=>a.id==EID):null,t=TMP.e||e||{d:td(),v:Object.keys(D.ven)[0],i:'',q:'',p:'',t:'',k:'',c:'',s:'',no:''},it=(D.ven[t.v]&&D.ven[t.v].i)||[];
+return `<div class="c"><label>日期<input type="date" id="ed" value="${t.d}"></label><div class="r2"><label>廠商<select id="ev" onchange="evc()">${Object.keys(D.ven).map(v=>`<option${v==t.v?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>單號（送貨單／發票）<input id="eo" value="${esc(t.no)}"></label></div>
+<label>品項（可選清單或自行輸入）<input id="ei" list="il" value="${esc(t.i)}" oninput="eic()" autocomplete="off"><datalist id="il">${it.map(x=>`<option value="${esc(x.n)}">`).join('')}</datalist></label>
+<div class="r2"><label>產品編號<input id="ec" value="${esc(t.c)}"></label><label>品名規格<input id="es" value="${esc(t.s)}"></label></div>
+<div class="r3"><label>數量<input type="number" step="any" inputmode="decimal" id="eq" value="${t.q}" oninput="ecalc()"></label><label>單價<input type="number" step="any" inputmode="decimal" id="ep" value="${t.p}" oninput="ecalc()"></label><label>含稅金額<input type="number" step="any" inputmode="decimal" id="et" value="${t.t}"></label></div>
+<label>備註<input id="ek" value="${esc(t.k)}"></label><button class="btn" onclick="saveE()">${e?'更新支出':'儲存支出'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
 function saveE(){const x=readE(),t=+x.t;if(!x.v||!x.d||!(t>0)){toast('請填日期與金額');return}
-const o={id:EID||Date.now(),d:x.d,v:x.v,i:x.i||x.v,q:x.q===''?'':+x.q,p:x.p===''?'':+x.p,t:t,k:x.k};
+const o={id:EID||Date.now(),d:x.d,v:x.v,i:x.i||x.v,q:x.q===''?'':+x.q,p:x.p===''?'':+x.p,t:t,k:x.k,c:x.c,s:x.s,no:x.no};
 if(EID){D.exp[D.exp.findIndex(a=>a.id==EID)]=o}else D.exp.push(o);
 const vn=D.ven[x.v],it=vn.i.find(a=>a.n==o.i);let chg='';
-if(it){if(o.p!==''&&o.p!=it.p){(it.h=it.h||[]).push([o.d,it.p,o.p]);it.p=o.p;chg='，單價已更新'}}else vn.i.push({n:o.i,u:'',p:o.p===''?0:o.p});
+if(it){if(o.p!==''&&o.p!=it.p){(it.h=it.h||[]).push([o.d,it.p,o.p]);it.p=o.p;chg='，單價已更新'}if(o.c&&!it.c)it.c=o.c;if(o.s&&!it.s)it.s=o.s}else vn.i.push({n:o.i,u:'',p:o.p===''?0:o.p,c:o.c,s:o.s});
 EID=null;TMP={};save();toast('支出已儲存'+chg);if(RET)back();else render()}
 function delE(){D.exp=D.exp.filter(a=>a.id!=EID);EID=null;TMP={};save();toast('已刪除');if(RET)back();else render()}
-function editE(id){EID=id;TMP={};AT='exp';go('add')}
-function editR(d){EID=null;TMP={rd:d};AT='rev';go('add')}
-
-function list(){const{R,E}=agg(),src=FT=='rev'?Object.keys(D.rev):FT=='exp'?D.exp.map(e=>e.d):[...Object.keys(D.rev),...D.exp.map(e=>e.d)],ds=[...new Set(src)].filter(k=>k.startsWith(YM)).sort().reverse();
-const ch=[['all','全部'],['rev','營收'],['exp','支出']].map(([k,l])=>`<button class="${FT==k?'on':''}" onclick="FT='${k}';render()">${l}</button>`).join('');
-return mn()+`<div class="seg">${ch}</div>`+(ds.map(d=>{const r=D.rev[d],es=D.exp.filter(x=>x.d==d);return `<div class="c"><div class="dh"><b>${d.slice(5)}（${wd(d)}）</b><span><i class="ok">${f(R[d]||0)}</i> <i class="bd">-${f(E[d]||0)}</i></span></div>`+(FT!='exp'&&r?`<div class="row" onclick="editR('${d}')"><span>營收 早 ${f(r.m||0)}／晚 ${f(r.n||0)}${r.k?' <small>'+esc(r.k)+'</small>':''}</span><b>${f((+r.m||0)+(+r.n||0))}</b></div>`:'')+(FT!='rev'?es.map(x=>`<div class="row" onclick="editE(${x.id})"><span>${esc(x.v)}・${esc(x.i)}${x.q!==''&&x.q!=null?` <small>${x.q}×${x.p}</small>`:''}</span><b>${f(x.t)}</b></div>`).join(''):'')+'</div>'}).join('')||'<p class="mu">這個月還沒有紀錄</p>')}
 
 function vend(){return VN&&D.ven[VN]?vdet2():vlist2()}
-function vendOld(){if(VN&&D.ven[VN])return vdet();
-const ms={};for(const[v,s]of grp(YM,x=>x.v))ms[v]=s;const by={};for(const v in D.ven)(by[D.ven[v].c]=by[D.ven[v].c]||[]).push(v);
-return mn()+CATS.filter(c=>by[c]).map(c=>{const vs=by[c].sort((a,b)=>(ms[b]||0)-(ms[a]||0));return `<div class="c"><div class="dh"><b>${c}</b><span>${f(vs.reduce((a,v)=>a+(ms[v]||0),0))}</span></div>`+vs.map(v=>`<div class="row" data-v="${esc(v)}" onclick="VN=this.dataset.v;render();scrollTo(0,0)"><span>${esc(v)} <small>${D.ven[v].i.length}項</small></span><b>${f(ms[v]||0)}</b></div>`).join('')+'</div>'}).join('')+
-`<div class="c"><h3>新增廠商</h3><label>名稱<input id="nv"></label><label>分類<select id="nc">${CATS.map(c=>`<option>${c}</option>`).join('')}</select></label><button class="btn" onclick="addV()">新增</button></div>`}
 function addV(){const n=$('nv').value.trim();if(!n||D.ven[n]){toast('名稱空白或已存在');return}D.ven[n]={c:$('nc').value,i:[]};VN=n;save();render()}
-function vdet(){const v=D.ven[VN],all=D.exp.filter(e=>e.v==VN).sort((a,b)=>b.d.localeCompare(a.d)),ms=all.filter(e=>e.d.startsWith(YM)).reduce((a,e)=>a+e.t,0);
-return `<button class="bt2" onclick="VN=null;render()">‹ 返回廠商</button><div class="c" style="margin-top:10px"><h2>${esc(VN)}</h2><label>分類<select onchange="D.ven[VN].c=this.value;save();toast('已更新分類')">${CATS.map(c=>`<option${c==v.c?' selected':''}>${c}</option>`).join('')}</select></label><div class="g"><div class="c"><small>${+YM.slice(5)}月進貨</small><b>${f(ms)}</b></div><div class="c"><small>累計進貨</small><b>${f(all.reduce((a,e)=>a+e.t,0))}</b></div></div></div>
-<div class="c"><h3>品項與單價（可直接改價）</h3>${v.i.map((x,i)=>`<div class="row"><span>${esc(x.n)}${x.u?` <small>／${esc(x.u)}</small>`:''}</span><span class="pr">$<input type="number" step="any" inputmode="decimal" value="${x.p}" data-i="${i}" onchange="setP(this)"><button class="x" onclick="two(this,()=>di(${i}))">刪除</button></span></div>`).join('')||'<p class="mu">尚無品項</p>'}
-<div class="r3" style="margin-top:10px"><label>品名<input id="ni"></label><label>產品編號<input id="ncd"></label><label>品名規格<input id="nsp"></label><label>單位<input id="nu"></label><label>單價<input id="np" type="number" step="any" inputmode="decimal"></label></div><button class="btn" onclick="addI()">新增品項</button></div>
-<div class="c"><h3>進貨紀錄（最近20筆）</h3>${all.slice(0,20).map(e=>`<div class="row"><span>${e.d.slice(5)} ${esc(e.i)}</span><b>${f(e.t)}</b></div>`).join('')||'<p class="mu">尚無紀錄</p>'}</div>`}
-let VT='log';
+let VT='log',VF='all',VK='';
 function lastD(v){let m='';for(const e of D.exp)if(e.v==v&&e.d>m)m=e.d;return m?m.slice(5):'無'}
 function vf(q){document.querySelectorAll('.vr').forEach(r=>r.style.display=r.dataset.v.includes(q)?'':'none')}
 function vlist2(){const ms={};for(const[v,s]of grp(YM,x=>x.v))ms[v]=s;const tot=Object.values(ms).reduce((a,b)=>a+b,0),by={};for(const v in D.ven)(by[D.ven[v].c]=by[D.ven[v].c]||[]).push(v);
@@ -146,18 +124,16 @@ CATS.filter(c=>by[c]).map(c=>{const vs=by[c].sort((a,b)=>(ms[b]||0)-(ms[a]||0)),
 `<div class="c"><h3>新增廠商</h3><label>名稱<input id="nv"></label><label>分類<select id="nc">${CATS.map(c=>`<option>${c}</option>`).join('')}</select></label><button class="btn" onclick="addV()">新增</button></div>`}
 function vdet2(){const v=D.ven[VN],all=D.exp.filter(e=>e.v==VN).sort((a,b)=>b.d.localeCompare(a.d)),mo=all.filter(e=>e.d.startsWith(YM)),ms=mo.reduce((a,e)=>a+e.t,0);
 const tb=[['log','進貨明細'],['items','全部品項'],['order','本次叫貨'],['st','統計']].map(([k,l])=>`<button class="${VT==k?'on':''}" onclick="VT='${k}';render()">${l}</button>`).join('');let b='';
-if(VT=='items'){b=vitems(v,all,mo)}else if(0){const rows=v.i.map((x,i)=>{const es=mo.filter(e=>e.i==x.n);return{x:x,i:i,q:es.reduce((a,e)=>a+(+e.q||0),0),s:es.reduce((a,e)=>a+e.t,0)}}).sort((a,b)=>b.s-a.s);
-b=`<div class="c"><h3>品項與單價（${v.i.length}項，改價會記錄漲跌）</h3>${rows.map(({x,i,q,s})=>{const h=(x.h||[]).slice(-1)[0],d=h?h[2]-h[1]:0;return `<div class="row"><span><b>${esc(x.n)}</b>${x.c?` <small>編號 ${esc(x.c)}</small>`:''}${x.s?`<br><small>${esc(x.s)}</small>`:''}${x.u?` <small>／${esc(x.u)}</small>`:''}<br><small>本月 ${q?q+(x.u||'')+'・':''}${f(s)}${h?`・<i class="${d>0?'bd':'ok'}">${d>0?'↑':'↓'}${+Math.abs(d).toFixed(2)}（${h[0].slice(5)}）</i>`:''}</small></span><span class="pr">$<input type="number" step="any" inputmode="decimal" value="${x.p}" data-i="${i}" onchange="setP(this)"><button class="x" onclick="two(this,()=>di(${i}))">刪除</button></span></div>`}).join('')||'<p class="mu">尚無品項</p>'}<div class="r3" style="margin-top:10px"><label>品名<input id="ni"></label><label>產品編號<input id="ncd"></label><label>品名規格<input id="nsp"></label><label>單位<input id="nu"></label><label>單價<input id="np" type="number" step="any" inputmode="decimal"></label></div><button class="btn" onclick="addI()">新增品項</button></div>`}
-else if(VT=='order'){b=vord(v,all)}else if(VT=='log'){b=vlog(v,all,mo,ms);if(0)b=`<div class="c"><div class="dh"><b>${+YM.slice(5)}月進貨</b><span>${mo.length}筆・${f(ms)}</span></div>${mo.map(e=>`<div class="row" onclick="editE(${e.id})"><span>${e.d.slice(5)}（${wd(e.d)}）${esc(e.i)}${e.q!==''&&e.q!=null?` <small>${e.q}×${e.p}</small>`:''}</span><b>${f(e.t)}</b></div>`).join('')||'<p class="mu">本月無進貨</p>'}</div>`}
+if(VT=='items'){b=vitems(v,all,mo)}
+else if(VT=='order'){b=vord(v,all)}else if(VT=='log'){b=vlog(v,all,mo,ms)}
 else{const Y=YM.slice(0,4),mm=Array.from({length:12},(_,i)=>all.filter(e=>e.d.startsWith(Y+'-'+z(i+1))).reduce((a,e)=>a+e.t,0)),mx=Math.max(...mm,1),days=new Set(mo.map(e=>e.d)).size,top=Object.entries(mo.reduce((o,e)=>(o[e.i]=(o[e.i]||0)+e.t,o),{})).sort((a,b)=>b[1]-a[1]).slice(0,8),ch=v.i.filter(x=>x.h&&x.h.length).flatMap(x=>x.h.map(h=>[h[0],x.n,h[1],h[2]])).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,10);
 b=`<div class="g"><div class="c"><small>本月進貨天數</small><b>${days}天</b></div><div class="c"><small>平均每次進貨</small><b>${f(days?ms/days:0)}</b></div></div><div class="c"><h3>${Y}年每月進貨</h3>${mm.map((s,i)=>`<div class="row"><span>${i+1}月</span><b>${f(s)}</b></div><div class="tk"><u style="width:${s/mx*100}%"></u></div>`).join('')}</div><div class="c"><h3>本月品項金額排行</h3>${top.map(([k,s])=>`<div class="row"><span>${esc(k)}</span><b>${f(s)} <small>${pc(s,ms)}</small></b></div>`).join('')||'<p class="mu">本月無進貨</p>'}</div><div class="c"><h3>近期調價紀錄</h3>${ch.map(h=>`<div class="row"><span>${h[0]} ${esc(h[1])}</span><b>$${h[2]}→$${h[3]}</b></div>`).join('')||'<p class="mu">尚無調價紀錄</p>'}</div>`}
 return `<div class="c"><label>廠商名稱<input value="${esc(VN)}" onchange="rnV(this)"></label><div class="r2"><label>分類<select onchange="D.ven[VN].c=this.value;save();toast('已更新分類')">${CATS.map(c=>`<option${c==v.c?' selected':''}>${c}</option>`).join('')}</select></label><label>電話<input value="${esc(v.ph)}" onchange="D.ven[VN].ph=this.value;save()"></label></div><div class="r2"><label>聯絡人<input value="${esc(v.ct)}" onchange="D.ven[VN].ct=this.value;save()"></label><label>付款方式<input value="${esc(v.pm)}" placeholder="現金／月結" onchange="D.ven[VN].pm=this.value;save()"></label></div><div class="r2"><label>送貨日<input value="${esc(v.dl)}" placeholder="例：週二、週四" onchange="D.ven[VN].dl=this.value;save()"></label><label>地址<input value="${esc(v.ad)}" onchange="D.ven[VN].ad=this.value;save()"></label></div><label>備註<input value="${esc(v.nt)}" onchange="D.ven[VN].nt=this.value;save()"></label><div class="g" style="margin:0"><div class="c"><small>${+YM.slice(5)}月進貨</small><b>${f(ms)}</b></div><div class="c"><small>累計進貨</small><b>${f(all.reduce((a,e)=>a+e.t,0))}</b></div></div><button class="btn" onclick="vAdd()">＋ 記一筆進貨</button></div>`+mn()+`<div class="seg">${tb}</div>`+b+`<button class="bt2" style="color:var(--bd)" onclick="two(this,delV)">刪除此廠商</button>`}
 function rnV(el){const n=el.value.trim();if(!n||D.ven[n]){toast('名稱空白或已存在');render();return}D.ven[n]=D.ven[VN];delete D.ven[VN];D.exp.forEach(e=>{if(e.v==VN)e.v=n});VN=n;save();toast('已改名');render()}
 function delV(){if(D.exp.some(e=>e.v==VN)){toast('已有進貨紀錄，無法刪除');return}delete D.ven[VN];VN=null;save();render()}
-function vAdd(){TMP={e:{d:td(),v:VN,i:'',q:'',p:'',t:'',k:''}};AT='exp';EID=null;go('add')}
 function setP(el){const x=D.ven[VN].i[+el.dataset.i],n=+el.value;if(n!=x.p){(x.h=x.h||[]).push([td(),x.p,n]);x.p=n}save();toast('單價已更新');render()}
 function di(i){D.ven[VN].i.splice(i,1);save();render()}
-function addI(){const n=$('ni').value.trim();if(!n){toast('請輸入品名');return}D.ven[VN].i.push({n:n,u:$('nu').value.trim(),p:+$('np').value||0});save();render()}
+function addI(){const n=$('ni').value.trim();if(!n){toast('請輸入品名');return}D.ven[VN].i.push({n:n,u:$('nu').value.trim(),p:+$('np').value||0,c:$('ncd').value.trim(),s:$('nsp').value.trim()});save();render()}
 
 function rep(){const{R,E}=agg(),tb=[['day','每日'],['mon','每月'],['yr','每年']].map(([k,l])=>`<button class="${RT==k?'on':''}" onclick="RT='${k}';render()">${l}</button>`).join('');let b='';
 if(RT=='day'){const ds=[...new Set([...Object.keys(R),...Object.keys(E)])].filter(k=>k.startsWith(YM)).sort();let a=0,c=0,d=0,e=0;
@@ -172,29 +148,10 @@ b=tbl(['年度','營收','支出','盈餘','營業天數','日均'],ys.map(y=>{c
 return `<div class="seg">${tb}</div>`+b+admCards()+`<div class="c"><h3>備份／還原</h3><p class="mu">資料存在雲端，也可產生備份文字另外保存。</p><textarea id="bk" rows="3"></textarea><button class="btn" onclick="bkp()">產生備份文字</button><button class="bt2" onclick="rst()">用上方文字還原</button></div>`}
 function bkp(){const t=$('bk');t.value=JSON.stringify(D);t.select();try{navigator.clipboard.writeText(t.value)}catch(e){}toast('已產生，請全選複製')}
 function rst(){try{const o=JSON.parse($('bk').value);if(!o.rev||!o.exp||!o.ven)throw 0;D=o;save();toast('已還原');render()}catch(e){toast('備份格式不正確')}}
-function rs(){D=JSON.parse(JSON.stringify(SEED));save();toast('已重設');render()}
 
-function render(){if(ROLE&&ROLE!='admin'&&(V=='home'||V=='rep'))V='list';const T={home:home,add:add,list:list,ven:vend,rep:rep,pw:pwView};$('app').innerHTML=T[V]();$('hbk').innerHTML=topbar();$('hus').innerHTML=SES&&ACC[SES]?esc(ACC[SES].u)+'（'+(ROLE=='admin'?'管理員':'員工')+'）・<span onclick="logout()" style="color:var(--ac);font-weight:700">登出</span>':'';
+function render(){if(ROLE&&ROLE!='admin'&&(V=='home'||V=='rep'))V='list';const T={home:home,add:add,list:list,ven:vend,rep:rep,pw:pwView};$('app').innerHTML=T[V]();$('hbk').innerHTML=topbar();$('hus').innerHTML=SES&&ACC[SES]?esc(ACC[SES].u)+'（'+(ROLE=='admin'?'管理員':'員工')+'）・<span onclick="logout()" style="color:var(--ac);font-weight:700;cursor:pointer">登出</span>・<span onclick="go(\'pw\')" style="color:var(--ac);font-weight:700;cursor:pointer">改密碼</span>':'';
 $('nav').innerHTML=[['home','🏠','總覽'],['list','📋','明細'],['add','＋','記帳'],['ven','🏪','廠商'],['rep','📊','報表']].filter(x=>ROLE=='admin'||'list,add,ven'.includes(x[0])).map(([k,i,l])=>`<button class="${V==k?'on':''}${k=='add'?' fab':''}" onclick="go('${k}')"><span>${i}</span>${l}</button>`).join('')}
-let VF='all',VK='';
-function mig(){for(const v in SEED.ven){const t=D.ven[v];if(!t)continue;SEED.ven[v].i.forEach(s=>{const x=t.i.find(i=>i.n==s.n);if(x){if(!x.c&&s.c)x.c=s.c;if(!x.s&&s.s)x.s=s.s}})}
-for(const e of D.exp){const x=((D.ven[e.v]||{}).i||[]).find(i=>i.n==e.i);if(x){if(e.c==null)e.c=x.c||'';if(e.s==null)e.s=x.s||''}}save()}
-function readE(){return{d:$('ed').value,v:$('ev').value,i:$('ei').value.trim(),q:$('eq').value,p:$('ep').value,t:$('et').value,k:$('ek').value,c:$('ec').value.trim(),s:$('es').value.trim(),no:$('eo').value.trim()}}
-function evc(){TMP.e=readE();TMP.e.i='';TMP.e.p='';TMP.e.t='';TMP.e.c='';TMP.e.s='';render()}
-function eic(){const x=((D.ven[$('ev').value]||{}).i||[]).find(i=>i.n==$('ei').value);if(x){if(x.p)$('ep').value=x.p;$('ec').value=x.c||'';$('es').value=x.s||'';if(!$('eq').value)$('eq').value=1;ecalc()}}
-function addE(){const e=EID?D.exp.find(a=>a.id==EID):null,t=TMP.e||e||{d:td(),v:Object.keys(D.ven)[0],i:'',q:'',p:'',t:'',k:'',c:'',s:'',no:''},it=(D.ven[t.v]&&D.ven[t.v].i)||[];
-return `<div class="c"><label>日期<input type="date" id="ed" value="${t.d}"></label><div class="r2"><label>廠商<select id="ev" onchange="evc()">${Object.keys(D.ven).map(v=>`<option${v==t.v?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>單號（送貨單／發票）<input id="eo" value="${esc(t.no)}"></label></div>
-<label>品項（可選清單或自行輸入）<input id="ei" list="il" value="${esc(t.i)}" oninput="eic()" autocomplete="off"><datalist id="il">${it.map(x=>`<option value="${esc(x.n)}">`).join('')}</datalist></label>
-<div class="r2"><label>產品編號<input id="ec" value="${esc(t.c)}"></label><label>品名規格<input id="es" value="${esc(t.s)}"></label></div>
-<div class="r3"><label>數量<input type="number" step="any" inputmode="decimal" id="eq" value="${t.q}" oninput="ecalc()"></label><label>單價<input type="number" step="any" inputmode="decimal" id="ep" value="${t.p}" oninput="ecalc()"></label><label>含稅金額<input type="number" step="any" inputmode="decimal" id="et" value="${t.t}"></label></div>
-<label>備註<input id="ek" value="${esc(t.k)}"></label><button class="btn" onclick="saveE()">${e?'更新支出':'儲存支出'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
-function saveE(){const x=readE(),t=+x.t;if(!x.v||!x.d||!(t>0)){toast('請填日期與金額');return}
-const o={id:EID||Date.now(),d:x.d,v:x.v,i:x.i||x.v,q:x.q===''?'':+x.q,p:x.p===''?'':+x.p,t:t,k:x.k,c:x.c,s:x.s,no:x.no};
-if(EID){D.exp[D.exp.findIndex(a=>a.id==EID)]=o}else D.exp.push(o);
-const vn=D.ven[x.v],it=vn.i.find(a=>a.n==o.i);let chg='';
-if(it){if(o.p!==''&&o.p!=it.p){(it.h=it.h||[]).push([o.d,it.p,o.p]);it.p=o.p;chg='，單價已更新'}if(o.c&&!it.c)it.c=o.c;if(o.s&&!it.s)it.s=o.s}else vn.i.push({n:o.i,u:'',p:o.p===''?0:o.p,c:o.c,s:o.s});
-EID=null;TMP={};save();toast('支出已儲存'+chg);if(RET)back();else render()}
-function addI(){const n=$('ni').value.trim();if(!n){toast('請輸入品名');return}D.ven[VN].i.push({n:n,u:$('nu').value.trim(),p:+$('np').value||0,c:$('ncd').value.trim(),s:$('nsp').value.trim()});save();render()}
+
 const CE={'海鮮':['🦐','#0ea5e9'],'肉類':['🥩','#dc2626'],'火鍋料':['🍢','#f59e0b'],'韓國食材':['🌶️','#e11d48'],'蔬菜':['🥬','#16a34a'],'調味乾貨':['🧂','#a16207'],'雜貨包材':['📦','#6366f1'],'固定支出':['🏠','#64748b'],'其他':['•','#94a3b8']};
 const ce=c=>CE[c]||CE['其他'];
 const ico=c=>`<span class="ic" style="background:${ce(c)[1]}26">${ce(c)[0]}</span>`;
@@ -238,14 +195,12 @@ function back(){const r=RET;RET=null;EID=null;TMP={};if(!r){go('home');return}V=
 function editE(id){RET={V:V,VN:VN,VT:VT,y:scrollY};EID=id;TMP={};AT='exp';V='add';VN=null;render();scrollTo(0,0)}
 function editR(d){RET={V:V,VN:VN,VT:VT,y:scrollY};EID=null;TMP={rd:d};AT='rev';V='add';VN=null;render();scrollTo(0,0)}
 function vAdd(){RET={V:'ven',VN:VN,VT:VT,y:scrollY};TMP={e:{d:td(),v:VN,i:'',q:'',p:'',t:'',k:'',c:'',s:'',no:''}};AT='exp';EID=null;V='add';VN=null;render();scrollTo(0,0)}
-let USER=null,ME=null,ROLE=null,DB=null,CANW=false,STAFF={},LW={},WQ=0,IMP=null;
+let ROLE=null,DB=null,CANW=false,LW={},WQ=0,IMP=null;
 function load(){return{rev:{},exp:[],ven:{}}}
-function mig(){}
 function shards(){const s={'ven/all':{ven:D.ven}},m={},g=k=>m[k]||(m[k]={rev:{},exp:[]});for(const d in D.rev)g(d.slice(0,7)).rev[d]=D.rev[d];for(const e of D.exp)g(e.d.slice(0,7)).exp.push(e);for(const k in m)s['m/'+k]=m[k];return s}
 function save(){if(!DB)return;if(!CANW){toast('目前是唯讀權限，變更不會儲存');return}clearTimeout(WQ);WQ=setTimeout(flush,500)}
 async function flush(){WQ=0;const s=shards();for(const p in s){if(p=='ven/all'&&!Object.keys(D.ven).length)continue;const j=JSON.stringify(s[p]);if(LW[p]!==j){try{await DB.doc(p).set(s[p]);LW[p]=j}catch(e){toast('雲端儲存失敗：'+((e&&e.code)||'請重試'))}}}for(const p in LW)if(!s[p]){try{await DB.doc(p).set({rev:{},exp:[]});delete LW[p]}catch(e){}}}
 async function pull(){const ms=await DB.collection('m').get(),vs=await DB.doc('ven/all').get(),n={rev:{},exp:[],ven:{}};if(vs.exists)n.ven=vs.data().ven||{};ms.docs.forEach(d=>{const x=d.data();Object.assign(n.rev,x.rev||{});(x.exp||[]).forEach(e=>n.exp.push(e))});D=n;LW={};const s=shards();for(const p in s)LW[p]=JSON.stringify(s[p])}
-function lock(msg,code){$('nav').style.display='none';$('hbk').innerHTML='';$('app').innerHTML=`<div class="c" style="margin-top:30px;text-align:center"><h2>需要登入</h2><p>${esc(msg)}</p>${code?`<label>您的帳號代碼（交給管理員）<input readonly value="${esc(code)}" onclick="this.select()"></label>`:''}<button class="btn" onclick="location.reload()">重新檢查</button></div>`}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&DB&&ROLE&&!WQ&&V!='add'){pull().then(render).catch(()=>{})}});
 const nn=x=>{if(typeof x=='number')return x;const v=parseFloat(String(x).replace(/[,\s$]/g,''));return isFinite(v)?v:null};
 function xd(v){if(typeof v=='number'&&v>20000&&v<80000)return new Date(Math.round((v-25569)*864e5)).toISOString().slice(0,10);if(typeof v=='string'){const m=v.match(/(\d{4})[\/\-.年](\d{1,2})[\/\-.月](\d{1,2})/);if(m)return m[1]+'-'+z(+m[2])+'-'+z(+m[3])}return null}
@@ -271,7 +226,7 @@ let ACC={},SES=null,CANA=false;
 const pwn=s=>String(s).normalize('NFKC').trim();
 let INIT=false,BUSY=false,SEC=null;
 const em=u=>[...new TextEncoder().encode(u.trim().toLowerCase())].map(b=>b.toString(16).padStart(2,'0')).join('')+'@restaurant.example';
-function emsg(e){const c=(e&&e.code)||'';if(c=='unavailable'||/unavailable|offline/i.test((e&&e.message)||''))return'無法連線到 Firebase 資料庫（請確認網路正常，或關閉阻擋廣告/防追蹤外掛後重試）';if(c=='auth/email-already-in-use')return'這個帳號已存在（若曾刪除過，請到 Firebase 後台把該使用者一併刪除）';if(c=='auth/weak-password')return'密碼至少 6 碼';if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return'帳號或密碼錯誤';if(/permission-denied/.test(c))return'沒有權限，請確認設定碼正確，或 Firestore 規則已發布';if(c=='auth/too-many-requests')return'嘗試次數過多，請稍後再試';if(/api-key/.test(c))return'Firebase 的 apiKey 設定不正確';if(c=='auth/requires-recent-login')return'請先登出再重新登入後，再修改密碼';return'發生錯誤：'+(c||(e&&e.message)||'')}
+function emsg(e){const c=(e&&e.code)||'';if(c=='unavailable'||/unavailable|offline/i.test((e&&e.message)||''))return'無法連線到 Firebase 資料庫（請確認網路正常，或關閉阻擋廣告/防追蹤外掛後重試）';if(c=='auth/email-already-in-use')return'這個帳號已存在（請改按「我已經有帳號，改用登入」或換一個帳號名稱）';if(c=='auth/weak-password')return'密碼至少 6 碼';if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return'帳號或密碼錯誤';if(/permission-denied/.test(c))return'沒有權限，請確認設定碼正確，或 Firestore 規則已發布';if(c=='auth/too-many-requests')return'嘗試次數過多，請稍後再試';if(/api-key/.test(c))return'Firebase 的 apiKey 設定不正確';if(c=='auth/requires-recent-login')return'請先登出再重新登入後，再修改密碼';return'發生錯誤：'+(c||(e&&e.message)||'')}
 function mkDB(){const F=window.FB,raw=p=>/^(accounts|meta)(\/|$)/.test(p),ref=p=>F.doc(F.db,...p.split('/'));
 return{doc:p=>({get:async()=>{const s=await F.getDoc(ref(p)),d=s.exists()?s.data():null;return{id:s.id,exists:!!d,data:()=>d?(raw(p)?d:JSON.parse(d.j)):undefined}},set:d=>F.setDoc(ref(p),raw(p)?d:{j:JSON.stringify(d)}),update:d=>F.updateDoc(ref(p),d),delete:()=>F.deleteDoc(ref(p))}),
 collection:c=>({get:async()=>{const q=await F.getDocs(F.collection(F.db,c));return{docs:q.docs.map(x=>({id:x.id,exists:true,data:()=>{const d=x.data();return raw(c)?d:JSON.parse(d.j)}}))}}})}}
@@ -279,21 +234,45 @@ async function boot(){$('nav').style.display='none';$('app').innerHTML='<p class
 try{if(!window.FB)await new Promise((r,j)=>{addEventListener('fb-ready',r,{once:true});setTimeout(()=>j(new Error('timeout')),15000)});
 DB=mkDB();CANW=true;try{INIT=(await DB.doc('meta/init').get()).exists}catch(e){INIT=false}
 FB.onAuthStateChanged(FB.auth,async u=>{if(BUSY)return;if(!u){SES=null;ROLE=null;loginUI();return}
-try{const a=await DB.doc('accounts/'+u.uid).get();if(!a.exists){await FB.signOut(FB.auth);loginUI('此帳號尚未開通，請聯絡管理員（或若為首次設定，請輸入設定碼建立管理員）。');return}SES=u.uid;ACC={};ACC[SES]=a.data();await enter()}catch(e){loginUI(emsg(e))}})}
+try{const a=await DB.doc('accounts/'+u.uid).get();if(!a.exists){await FB.signOut(FB.auth);loginUI('此帳號尚未開通，請輸入設定碼建立管理員，或聯絡管理員。');return}SES=u.uid;ACC={};ACC[SES]=a.data();await enter()}catch(e){loginUI(emsg(e))}})}
 catch(e){$('app').innerHTML='<div class="c"><h2>連線失敗</h2><p class="mu">無法載入 Firebase，請確認網路後重新整理。</p></div>'}}
 function loginUI(msg){$('nav').style.display='none';$('hbk').innerHTML='';$('hus').innerHTML='';
-const lf=`<div class="c" style="margin-top:20px"><h2>登入</h2><label>帳號<input id="lu" autocomplete="username" autocapitalize="off"></label><label>密碼<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')doLogin()"></label><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" style="width:auto;margin:0" onchange="$('lp').type=this.checked?'text':'password'">顯示密碼</label><button class="btn" onclick="doLogin()">登入</button></div>`,
-sf=`<div class="c" style="margin-top:20px"><h2>建立管理員帳號</h2><p class="mu">第一次使用，請輸入「設定碼」，並自行設定管理員的「帳號」與「密碼」（至少6碼）。</p><label>設定碼<input id="lc" type="password" autocomplete="off" placeholder="請輸入後台設定的設定碼"></label><label>帳號（自訂）<input id="lu" autocomplete="off" autocapitalize="off" placeholder="例：admin"></label><label>密碼（自訂，至少 6 碼）<input id="lp" type="password" autocomplete="new-password"></label><label>再輸入一次密碼<input id="lp2" type="password" autocomplete="new-password"></label><button class="btn" onclick="setup()">建立並登入</button><button class="bt2" onclick="INIT=true;loginUI()">我已經有帳號，改用登入</button></div>`;
+const lf=`<div class="c" style="margin-top:20px"><h2>登入</h2><label>帳號<input id="lu" autocomplete="username" autocapitalize="off"></label><label>密碼<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')doLogin()"></label><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" style="width:auto;margin:0" onchange="$('lp').type=this.checked?'text':'password'">顯示密碼</label><button class="btn" id="lbtn" onclick="doLogin()">登入</button><button class="bt2" onclick="INIT=false;loginUI()">‹ 返回建立管理員帳號</button></div>`,
+sf=`<div class="c" style="margin-top:20px"><h2>建立管理員帳號</h2><p class="mu">第一次使用，請輸入「設定碼」，並自行設定管理員的「帳號」與「密碼」（至少6碼）。</p><label>設定碼<input id="lc" type="password" autocomplete="off" placeholder="請輸入後台設定的設定碼"></label><label>帳號（自訂）<input id="lu" autocomplete="off" autocapitalize="off" placeholder="例：boss"></label><label>密碼（自訂，至少 6 碼）<input id="lp" type="password" autocomplete="new-password"></label><label>再輸入一次密碼<input id="lp2" type="password" autocomplete="new-password"></label><button class="btn" id="sbtn" onclick="setup()">建立並登入</button><button class="bt2" onclick="INIT=true;loginUI()">我已經有帳號，改用登入</button></div>`;
 $('app').innerHTML=(msg?`<div class="c"><p class="bd">${esc(msg)}</p></div>`:'')+(INIT?lf:sf)}
-async function doLogin(){const u=$('lu').value.trim(),p=$('lp').value;if(!u||!p){toast('請輸入帳號與密碼');return}try{await FB.signIn(FB.auth,em(u),pwn(p))}catch(e){toast(emsg(e))}}
-async function setup(){const u=$('lu').value.trim(),p=pwn($('lp').value),code=$('lc').value.trim();if(!code){toast('請輸入設定碼');return}if(!u||p.length<6){toast('帳號不可空白，密碼至少 6 碼');return}if(p!==pwn($('lp2').value)){toast('兩次密碼不一致');return}
-BUSY=true;let made=false;try{let c;try{c=await FB.createUser(FB.auth,em(u),p);made=true}catch(e){if(e&&e.code=='auth/email-already-in-use'){try{c=await FB.signIn(FB.auth,em(u),p)}catch(x){BUSY=false;toast('這個帳號名稱已被使用且密碼不同。請換一個帳號名稱，或到 Firebase Authentication 刪除該使用者後重試。');return}}else throw e}
+async function doLogin(){const u=$('lu').value.trim(),p=$('lp').value;if(!u||!p){toast('請輸入帳號與密碼');return}const b=$('lbtn');if(b){b.disabled=true;b.textContent='登入中…'}try{await FB.signIn(FB.auth,em(u),pwn(p))}catch(e){if(b){b.disabled=false;b.textContent='登入'}toast(emsg(e))}}
+async function setup(){
+if(BUSY)return;
+const u=$('lu').value.trim(),p=pwn($('lp').value),code=$('lc').value.trim();
+if(!code){toast('請輸入設定碼');return}
+if(!u||p.length<6){toast('帳號不可空白，密碼至少 6 碼');return}
+if(p!==pwn($('lp2').value)){toast('兩次密碼不一致');return}
+BUSY=true;
+const b=$('sbtn');if(b){b.disabled=true;b.textContent='建立與匯入資料中，請稍候…'}
+let made=false;
+try{
+let c;
+try{c=await FB.createUser(FB.auth,em(u),p);made=true}
+catch(e){
+if(e&&e.code=='auth/email-already-in-use'){
+try{c=await FB.signIn(FB.auth,em(u),p)}
+catch(x){BUSY=false;if(b){b.disabled=false;b.textContent='建立並登入'}toast('這個帳號名稱已被使用且密碼不同，請換一個帳號名稱（例如 boss）');return}
+}else throw e
+}
 await DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin',code:code});
 await DB.doc('meta/init').set({done:true});
 await DB.doc('accounts/'+c.user.uid).set({u:u,role:'admin'});
 INIT=true;
-for(const k in window.__SD)await DB.doc(k).set(window.__SD[k]);
-SES=c.user.uid;ACC={};ACC[SES]={u:u,role:'admin'};BUSY=false;await enter()}catch(e){if(made)try{await FB.auth.currentUser.delete()}catch(x){}BUSY=false;toast(/permission-denied/.test((e&&e.code)||'')?'設定碼不正確，或尚未在 Firebase 建立設定碼':emsg(e))}}
+try{await Promise.all(Object.keys(window.__SD).map(k=>DB.doc(k).set(window.__SD[k])))}catch(se){console.warn('seed partial:',se)}
+SES=c.user.uid;ACC={};ACC[SES]={u:u,role:'admin'};
+BUSY=false;
+await enter();
+}catch(e){
+if(made)try{await FB.auth.currentUser.delete()}catch(x){}
+BUSY=false;
+if(b){b.disabled=false;b.textContent='建立並登入'}
+toast(/permission-denied/.test((e&&e.code)||'')?'設定碼不正確，或尚未在 Firebase 建立設定碼':emsg(e));
+}}
 async function loadAcc(){const q=await DB.collection('accounts').get();ACC={};q.docs.forEach(d=>ACC[d.id]=d.data())}
 async function enter(){ROLE=ACC[SES].role;CANA=ROLE=='admin';await pull();if(CANA)await loadAcc();V=CANA?'home':'list';$('nav').style.display='';render()}
 async function logout(){try{await FB.signOut(FB.auth)}catch(e){}D={rev:{},exp:[],ven:{}};ACC={};IMP=null;SES=null;ROLE=null}
@@ -307,6 +286,5 @@ l+=Object.entries(ACC).map(([id,a])=>`<div class="c" style="background:var(--bg)
 function pwView(){return `<div class="c"><h2>修改我的密碼</h2><label>新密碼（至少 6 碼）<input id="pw1" type="password" autocomplete="new-password"></label><label>再輸入一次<input id="pw2" type="password" autocomplete="new-password"></label><button class="btn" onclick="chgPw()">更新密碼</button></div>`}
 async function chgPw(){const a=pwn($('pw1').value);if(a.length<6){toast('密碼至少 6 碼');return}if(a!==pwn($('pw2').value)){toast('兩次密碼不一致');return}try{await FB.updatePassword(FB.auth.currentUser,a);toast('密碼已更新');go(ROLE=='admin'?'home':'list')}catch(e){toast(emsg(e))}}
 function topbar(){let t='';if(V=='add'&&RET)t='back()';else if(V=='ven'&&VN)t='VN=null;render();scrollTo(0,0)';else if(V=='pw')t="go(ROLE=='admin'?'home':'list')";return t?`<button class="bk" onclick="${t}">‹ 返回</button>`:''}
-const _r0=render;render=function(){_r0();if(SES&&ACC[SES])$('hus').innerHTML+='・<span onclick="go(\'pw\')" style="color:var(--ac);font-weight:700">改密碼</span>'};
 boot();
 </script></body></html>
