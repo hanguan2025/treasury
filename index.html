@@ -420,5 +420,83 @@ D.rules.push({id:id,v:v,i:$('rl_i').value.trim()||v,amt:a,freq:fq,day:day,start:
 function rlTog(id){const r=D.rules.find(x=>x.id==id);r.on=!r.on;const n=r.on?genRules():0;save();toast(r.on?'已啟用':'已暫停');render()}
 function rlDel(id){D.rules=D.rules.filter(x=>x.id!=id);save();toast('已刪除固定扣款');render()}
 setView=function(){return mgCard()+rlCard()+_sv0()};
+const SHM={'小北五金':['小北五金','雜貨包材','小北五金'],'遠東':['遠東','火鍋料','遠東'],'明創':['明創','肉類','明創'],'冠洲商行':['冠洲商行','調味乾貨','冠洲商行'],'蛤蠣':['蛤蠣','海鮮','蛤蠣'],'果菜市場':['國菜市場-綜合','蔬菜','國菜市場-綜合'],'全聯':['全聯','雜貨包材','全聯'],'瓦斯':['瓦斯費','雜費','瓦斯'],'韓濟大發':['韓濟大發','韓國食材','韓濟大發'],'高欣':['高欣','韓國食材','高欣'],'五洋實業-蝦子':['五洋實業-白蝦4號','海鮮','五洋實業-白蝦4號'],'高麗菜-屏東阿成':['屏東高麗菜阿成','蔬菜','屏東高麗菜阿成'],'起司':['起司','調味乾貨','起司'],'餐具':['餐具行','雜貨包材','餐具行'],'麥茶':['麥茶','調味乾貨','麥茶'],'椰奶-公司':['椰奶(公司)','調味乾貨','椰奶(公司)'],'天颶台北':['台北天颶','調味乾貨','台北天颶'],'岡山辣椒醬':['岡山辣椒醬','調味乾貨','岡山辣椒醬'],'鼎宇':['鼎宇','火鍋料','鼎宇'],'忠孝路':['忠孝路','韓國食材','忠孝路'],'大白菜臨時應急':['大白菜應急','蔬菜','大白菜應急'],'租屋':['房租','雜費','租屋/薪水']};
+const LB={code:/^(產品編號|貨品編號)$/,name:/^品名$/,spec:/^品名規格$/,qty:/^數量$/,unit:/^單位$/,pack:/^包裝$/,price:/^單價$/,disc:/^優惠$/,amt:/^(含稅金額|含稅|小計|合計|金額)$/};
+const sv=x=>x==null?'':String(x).trim();
+const dcell=c=>{if(typeof c=='number'&&c>40000&&c<60000)return xd(c);if(typeof c=='string'&&/^\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}/.test(c.trim()))return xd(c.trim());return null};
+const lbl=r=>{const m={};r.forEach((c,j)=>{const s=sv(c);for(const k in LB)if(m[k]==null&&LB[k].test(s))m[k]=j});return m};
+function hdrOf(r){for(let j=0;j<Math.min(4,r.length);j++){const d=dcell(r[j]);if(d){const m=lbl(r);return Object.keys(m).length>=2?{d:d,m:m,c:j}:null}}return null}
+function mkRow(cur,nm,g,warn,cat){const code=sv(g('code')),q=nn(g('qty')),p=nn(g('price')),ds=nn(g('disc'))||0,A=nn(g('amt')),pk=sv(g('pack'));
+let spec=sv(g('spec'));if(spec==nm)spec='';if(pk&&pk!='#')spec=(spec?spec+' ':'')+'包裝'+pk;
+let amt=A>0?A:(q>0&&p>0?+(q*p-ds).toFixed(2):0);
+if(!(A>0)&&amt>0)warn.push(cur+' '+nm+'：金額欄是空的，已用 數量×單價 算出 '+amt);
+if(A>0&&q>0&&p>0&&Math.abs(q*p-ds-A)>0.51)warn.push(cur+' '+nm+'：原表金額 '+A+' 與 數量×單價 '+(q*p-ds)+' 不同（照原表金額匯入）');
+if(q>0&&!(amt>0))warn.push(cur+' '+nm+'：有數量 '+q+' 但金額是 0（未匯入）');
+if(nm&&nm!='(未命名)')cat.set(nm,Object.assign(cat.get(nm)||{n:nm},{u:sv(g('unit'))||(cat.get(nm)||{}).u||'',c:code||(cat.get(nm)||{}).c||'',s:spec||(cat.get(nm)||{}).s||'',p:p>0?p:(cat.get(nm)||{}).p}));
+return amt>0?{d:cur,i:nm,q:q>0?q:'',p:p>0?p:'',t:amt,c:code,s:spec,no:'',k:''}:null}
+function subsetSum(c,t){const n=Math.min(c.length,14);for(let m=1;m<(1<<n);m++){let s=0;for(let i=0;i<n;i++)if(m&(1<<i))s+=c[i].a;if(Math.abs(s-t)<0.51)return c.filter((_,i)=>m&(1<<i))}return null}
+function extOf(r,maxC){let nm='',amt=0,note='';for(let j=maxC+1;j<r.length;j++){const c=r[j];if(typeof c=='number'){if(c>0)amt=c}else{const s=sv(c);if(!s||/^\d{4}[\/\-.]\d/.test(s)||s=='#')continue;if(!nm)nm=s;else note=note?note+' '+s:s}}return nm&&amt>0?{n:nm,a:amt,note:note}:null}
+function parseBlocks(rows){const E=[],cat=new Map(),warn=[],info=[],days=new Set();let cur=null,M=null,dc=0,NOc=false,mc=0,blk=[],un=[],ex=[],tsum=0,hasT=false;
+const fin=()=>{if(!cur)return;const s=blk.reduce((a,e)=>a+e.t,0);if(un.length){hasT=true;tsum+=un.some(u=>Math.abs(u-s)<0.51)?s:un[un.length-1]}else tsum+=s;
+if(un.length&&!un.some(u=>Math.abs(u-s)<0.51)){const T=un[un.length-1],diff=T-s;let hit=null;if(diff>0.5)hit=subsetSum(ex,diff);
+if(hit)hit.forEach(x=>{blk.push({d:cur,i:x.n,q:'',p:'',t:x.a,c:'',s:x.note,no:'',k:'表格右側加項'});info.push(cur+' '+x.n+' '+x.a+'（寫在表格右側，已算進原表當日小計）')});
+else warn.push(cur+'：原表當日小計 '+T+'，明細加總 '+s+'（差 '+(T-s)+'），找不到對應品項，請對照原表')}
+E.push(...blk);blk=[];un=[];ex=[]};
+for(const r of rows){if(r.some(c=>/總和/.test(sv(c)))){fin();cur=null;continue}
+const hd=hdrOf(r);if(hd){fin();cur=hd.d;M=hd.m;dc=hd.c;mc=Math.max(...Object.values(M));NOc=/^(NO|N0)$/i.test(sv(r[dc-1]));days.add(cur);continue}if(!cur)continue;
+const g=k=>M[k]==null?'':r[M[k]],nm=sv(r[dc])||sv(g('spec'))||sv(g('code')),A=nn(g('amt')),no=NOc&&typeof r[dc-1]=='number',q=nn(g('qty')),p=nn(g('price'));
+const x=extOf(r,mc);if(x)ex.push(x);
+if(!nm){if(A>0&&(q>0||p>0)){const e=mkRow(cur,'(未命名)',g,warn,cat);if(e){blk.push(e);warn.push(cur+'：有一筆沒填品名的品項（數量 '+(q||'')+'、單價 '+(p||'')+'、金額 '+A+'），已匯入為「(未命名)」')}}else if(A>0&&!no)un.push(A);else if(A>0&&no){const e=mkRow(cur,'(未命名)',g,warn,cat);if(e)blk.push(e)}continue}
+const e=mkRow(cur,nm,g,warn,cat);if(e)blk.push(e)}
+fin();return{E:E,cat:cat,warn:warn,info:info,days:days,tsum:hasT?tsum:null}}
+function parseLines(rows,def){const E=[],cat=new Map(),warn=[],info=[],days=new Set();let M=null,base='',cur=null;
+for(let i=0;i<Math.min(rows.length,12)&&!M;i++){const m=lbl(rows[i]);if(Object.keys(m).length>=2&&!rows[i].some(c=>dcell(c))){M=m;base=sv(rows[i][1])}}
+if(!M)return{E:E,cat:cat,warn:warn,info:info,days:days};
+for(const r of rows){if(r.some(c=>/總和/.test(sv(c))))break;let d=null;for(let j=0;j<3;j++){d=dcell(r[j]);if(d)break}if(d){cur=d;days.add(d)}if(!cur)continue;
+const g=k=>M[k]==null?'':r[M[k]];let nm=sv(g('name'))||sv(g('spec'));
+if(!d&&!nm&&!sv(g('code')))continue;if(!nm)nm=base||def;
+const e=mkRow(cur,nm,g,warn,cat);if(e)E.push(e)}
+return{E:E,cat:cat,warn:warn,info:info,days:days}}
+function parseRent(rows){const E=[],days=new Set();for(const r of rows){const d=dcell(r[1]);if(!d)continue;days.add(d);let a=nn(r[2])||0,s=nn(r[3])||0;const t=nn(r[4])||0;if(!a&&!s&&t>0)a=t;
+if(a>0)E.push({d:d,v:'房租',i:'租屋',q:'',p:'',t:a,c:'',s:'',no:'',k:''});if(s>0)E.push({d:d,v:'薪水',i:'薪水',q:'',p:'',t:s,c:'',s:'',no:'',k:''})}
+return{E:E,cat:new Map(),warn:[],info:[],days:days}}
+function parseRev(rows){const R=[];let hr=-1;for(let i=0;i<Math.min(rows.length,12);i++)if(rows[i].some(c=>sv(c)=='早')&&rows[i].some(c=>sv(c)=='晚')){hr=i;break}
+if(hr<0)return R;const cols=[];rows[hr].forEach((c,j)=>{if(sv(c)=='早')cols.push(j-2)});
+for(let i=hr+1;i<rows.length;i++){const r=rows[i];for(const dc of cols){const d=dcell(r[dc]);if(!d)continue;let m=nn(r[dc+2]),n=nn(r[dc+3]);const t=nn(r[dc+4]);if(m==null&&n==null&&t>0)m=t;if(m==null&&n==null)continue;R.push([d,m||0,n||0,sv(r[dc+5])])}}
+return R}
+function parseSum(rows){const o={map:{},month:null,income:null};rows.forEach((r,i)=>{const t=sv(r[2]);if(typeof r[1]=='number'&&t&&typeof r[3]=='number')o.map[t]=r[3];r.forEach((c,j)=>{const s=sv(c);let m;if((m=s.match(/(\d{4})\/(\d{1,2})月總收入/))){o.month=m[1]+'-'+z(+m[2]);const nx=rows[i+1]&&rows[i+1][j];if(typeof nx=='number')o.income=nx}})});return o}
+function parseMonthly(wb){const sh=n=>XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:true,defval:''});let R=[],E=[],warn=[],info=[],rec=[],scope=new Set(),cats={},items={},nv=new Set(),sum=null;
+for(const sn of wb.SheetNames){const key=sn.trim().replace(/^\d{4}-/,'');if(/每月營收明細/.test(sn)){R=parseRev(sh(sn));continue}if(/總表/.test(sn)){sum=parseSum(sh(sn));continue}}
+for(const sn of wb.SheetNames){const key=sn.trim().replace(/^\d{4}-/,'');if(/每月營收明細|總表/.test(sn)||sn.trim()=='日期'||sn.trim()=='工作表1')continue;
+const cfg=SHM[key],v0=cfg?cfg[0]:key,rows=sh(sn);let r;
+if(key=='租屋')r=parseRent(rows);else{const blocks=rows.some(x=>hdrOf(x));r=blocks?parseBlocks(rows):parseLines(rows,key)}
+const vs=new Set();r.E.forEach(e=>{e.v=e.v||v0;vs.add(e.v)});if(!r.E.length)vs.add(v0);
+vs.forEach(v=>{cats[v]=D.ven[v]?D.ven[v].c:(v=='薪水'?'薪資':cfg?cfg[1]:'其他');r.days.forEach(d=>scope.add(v+'|'+d.slice(0,7)))});
+items[v0]=[...r.cat.values()];E.push(...r.E);warn.push(...r.warn.map(w=>sn.trim()+'：'+w));info.push(...r.info.map(w=>sn.trim()+'：'+w));
+const S=r.E.reduce((a,e)=>a+e.t,0),T=sum&&cfg&&sum.map[cfg[2]]!=null?sum.map[cfg[2]]:null;rec.push({n:cfg?cfg[0]:key+'（未對應的分頁）',S:S,T:T,diff:T==null?null:S-T,U:r.tsum==null?null:r.tsum});
+vs.forEach(v=>{if(!D.ven[v])nv.add(v)})}
+let inc=null;if(sum&&sum.income!=null){const c=R.filter(x=>x[0].startsWith(sum.month)).reduce((a,x)=>a+x[1]+x[2],0);inc={m:sum.month,T:sum.income,S:c}}
+return{rev:R,exp:E,nv:[...nv],rec:rec,warn:warn,info:info,scope:[...scope],cats:cats,items:items,income:inc,monthly:true}}
+const parseGen=parseWB;
+parseWB=function(wb){return wb.SheetNames.some(s=>/每月營收明細|總表/.test(s))?parseMonthly(wb):parseGen(wb)};
+impok=function(){const I=IMP,key=e=>[e.d,e.v,e.i,e.q,e.t,e.no].join('|');let rem=0,a=0,id=Date.now();
+const sc=new Set(I.scope||[]),rp=$('imp_rep');if(sc.size&&rp&&rp.checked){const n0=D.exp.length;D.exp=D.exp.filter(e=>!sc.has(e.v+'|'+e.d.slice(0,7)));rem=n0-D.exp.length}
+I.rev.forEach(([d,m,n,k])=>{D.rev[d]={m:m,n:n,k:k}});
+const ens=v=>{if(!D.ven[v])D.ven[v]={c:(I.cats&&I.cats[v])||'其他',i:[]};return D.ven[v]};
+for(const v in (I.items||{})){const t=ens(v);I.items[v].forEach(it=>{const x=t.i.find(q=>q.n==it.n);if(!x)t.i.push({n:it.n,u:it.u||'',p:it.p||0,c:it.c||'',s:it.s||''});else{if(!x.u&&it.u)x.u=it.u;if(!x.c&&it.c)x.c=it.c;if(!x.s&&it.s)x.s=it.s;if(!x.p&&it.p)x.p=it.p}})}
+const ex=new Set(D.exp.map(key));I.exp.forEach(e=>{ens(e.v);e.id=id++;if(!ex.has(key(e))){D.exp.push(e);ex.add(key(e));a++}});
+IMP=null;save();toast('已匯入營收 '+I.rev.length+' 天、進貨 '+a+' 筆'+(rem?'（取代舊紀錄 '+rem+' 筆）':''));render()};
+function impCards(){const I=IMP;let pv='';
+if(I){const tot=I.exp.reduce((x,e)=>x+e.t,0),sc=new Set(I.scope||[]),nrep=D.exp.filter(e=>sc.has(e.v+'|'+e.d.slice(0,7))).length,rc=I.rec||[],bad=rc.filter(r=>r.U!=null?Math.abs(r.S-r.U)>0.51:(r.T!=null&&Math.abs(r.diff)>0.5||r.T==null&&r.S>0)).length,wr=I.warn||[];
+const st=r=>r.U!=null?(Math.abs(r.S-r.U)<0.51?'✓ 與每日小計相符':'⚠ 與每日小計差 '+f(r.S-r.U)):(r.T==null?(r.S>0?'⚠ 總表未列':'無進貨'):(Math.abs(r.diff)<0.51?'✓ 相符':'⚠ 與總表差 '+f(r.diff)));
+pv=`<div class="c"><h3>匯入預覽</h3><p>營收 <b>${I.rev.length}</b> 天、進貨／支出 <b>${I.exp.length}</b> 筆，合計 <b>${f(tot)}</b>${I.nv&&I.nv.length?'<br>將新增：'+I.nv.map(esc).join('、'):''}</p>
+${rc.length?`<h3>與您的「總表」對帳（${bad?bad+' 項需確認':'全部相符'}）</h3>`+tbl(['廠商','匯入加總','每日小計加總','總表','結果'],rc.map(r=>[esc(r.n),f(r.S),r.U==null?'—':f(r.U),r.T==null?'—':f(r.T),st(r)]))+'<p class="mu">「每日小計」是您每家分頁每天表格最下面那一列。匯入加總和它相符，代表沒有漏掉任何一筆。總表是月底另外重算的，可能因為單價調整、表格右側加項或沒填品名的品項而略有不同。</p>':''}
+${I.income?`<p>${I.income.m} 營收：明細 ${f(I.income.S)}，總表 ${f(I.income.T)}　${Math.abs(I.income.S-I.income.T)<0.51?'<span class="ok">✓ 相符</span>':'<span class="bd">⚠ 不符</span>'}</p>`:''}
+${(I.info||[]).length?`<h3>另外納入 ${I.info.length} 筆寫在表格右側的品項</h3><div style="max-height:160px;overflow:auto;font-size:12px">${I.info.map(w=>`<div class="row"><span>${esc(w)}</span></div>`).join('')}</div>`:''}
+${wr.length?`<h3>請您確認的 ${wr.length} 項</h3><div style="max-height:220px;overflow:auto;font-size:12px">${wr.slice(0,80).map(w=>`<div class="row"><span>${esc(w)}</span></div>`).join('')}${wr.length>80?'<p class="mu">…其餘 '+(wr.length-80)+' 項省略</p>':''}</div>`:(I.monthly?'<p class="ok">沒有發現任何金額不符。</p>':'')}
+${sc.size?`<label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="imp_rep" type="checkbox" checked style="width:auto;margin:0">取代這些廠商、這些月份已有的紀錄（目前 ${nrep} 筆），避免重複</label>`:''}
+<button class="btn" onclick="impok()">確認匯入</button><button class="bt2" onclick="IMP=null;render()">取消</button></div>`}
+return `<div class="c"><h3>匯入 Excel</h3><p class="mu"><b>月報表</b>（像「2026-8月.xlsx」這種有「每月營收明細」、各廠商分頁、「總表」的檔案）可直接匯入：會讀取全部營收、每家廠商每天的進貨（含產品編號、品名規格、數量、單價、含稅金額）、租屋，並自動和「總表」對帳。也支援一列一筆的簡單表格（標題需有：日期、廠商、品項、數量、單價、含稅金額）。</p><input type="file" accept=".xlsx,.xls,.csv" onchange="impf(this)"></div>${pv}`}
+admCards=function(){return impCards()+acctCard()};
 boot();
 </script></body></html>
