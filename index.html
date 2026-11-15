@@ -498,5 +498,17 @@ ${sc.size?`<label style="display:flex;gap:8px;align-items:center;margin-top:10px
 <button class="btn" onclick="impok()">確認匯入</button><button class="bt2" onclick="IMP=null;render()">取消</button></div>`}
 return `<div class="c"><h3>匯入 Excel</h3><p class="mu"><b>月報表</b>（像「2026-8月.xlsx」這種有「每月營收明細」、各廠商分頁、「總表」的檔案）可直接匯入：會讀取全部營收、每家廠商每天的進貨（含產品編號、品名規格、數量、單價、含稅金額）、租屋，並自動和「總表」對帳。也支援一列一筆的簡單表格（標題需有：日期、廠商、品項、數量、單價、含稅金額）。</p><input type="file" accept=".xlsx,.xls,.csv" onchange="impf(this)"></div>${pv}`}
 admCards=function(){return impCards()+acctCard()};
+let SP=null;
+const bkCard=()=>`<div class="c"><h3>備份／還原</h3><p class="mu">資料存在雲端，換手機也是同一份。這裡可以另外複製一份備份文字保存。</p><textarea id="bk" rows="3"></textarea><button class="btn" onclick="bkp()">產生備份文字</button><button class="bt2" onclick="rst()">用上方文字還原</button></div>`;
+const SPT={mg:'廠商管理',mm:'雜費項目管理',ms:'薪資員工管理',im:'匯入 Excel',ac:'帳號管理',bk:'備份／還原'};
+function spOpen(k){SP=k;if(k=='mg')MGT='v';if(k=='mm')MGT='m';if(k=='ms')MGT='s';render();scrollTo(0,0)}
+setView=function(){if(SP){let b='';if(SP[0]=='m')b=mgCard().replace(/<div class="seg"[^>]*>.*?<\/div>/s,'').replace('資料管理（新增、改名、刪除）',SPT[SP]);else if(SP=='im')b=impCards();else if(SP=='ac')b=acctCard();else b=bkCard();return `<h2 style="margin:0 4px 12px">${SPT[SP]}</h2>`+b}
+const n=k=>mgNames(k).length,row=(k,t,d)=>`<div class="row" style="align-items:center" onclick="spOpen('${k}')"><span><b>${t}</b><br><small>${d}</small></span><b style="color:var(--mu);font-size:22px">›</b></div>`;
+return `<div class="c"><h3>基本資料</h3>${row('mg','廠商管理','共 '+n('v')+' 家')}${row('mm','雜費項目管理','共 '+n('m')+' 項')}${row('ms','薪資員工管理','共 '+n('s')+' 位')}</div><div class="c"><h3>資料</h3>${row('im','匯入 Excel','匯入月報表或一列一筆的表格')}${row('bk','備份／還原','複製或還原備份文字')}</div><div class="c"><h3>帳號</h3>${row('ac','帳號管理','共 '+Object.keys(ACC).length+' 個帳號，新增、移除、改密碼')}</div>`};
+const _tb0=topbar;topbar=function(){if(V=='set'&&SP)return '<button class="bk" onclick="SP=null;render();scrollTo(0,0)">‹ 返回</button>';return _tb0()};
+const _go0=go;go=function(v){SP=null;_go0(v)};
+addE=function(){const e=EID?D.exp.find(a=>a.id==EID):null;if(e){const c=catOf(e.v);ET=c=='雜費'?'m':c=='薪資'?'s':'v'}if(ROLE!='admin'&&(ET=='s'||ET=='f'))ET='v';
+const b=(k,l)=>`<button class="${ET==k?'on':''}" onclick="ET='${k}';render()">${l}</button>`;
+return (e?'':`<div class="seg">${b('v','廠商進貨')}${b('m','雜費')}${ROLE=='admin'?b('s','薪資')+b('f','固定扣款'):''}</div>`)+(ET=='m'?addM(e):ET=='s'?addS(e):ET=='f'&&!e?rlCard():_ae())};
 boot();
 </script></body></html>
