@@ -100,13 +100,13 @@ return mn()+`<div class="g"><div class="c"><small>營收</small><b>${f(r)}</b></
 <div class="c"><h3>本月廠商支出前六名</h3>${vs.map(([v,s])=>`<div class="row"><span>${esc(v)}</span><b>${f(s)}</b></div><div class="tk"><u style="width:${s/vs[0][1]*100}%"></u></div>`).join('')||'<p class="mu">本月尚無支出</p>'}</div>`}
 
 function add(){const b=(k,l)=>`<button class="${AT==k?'on':''}" onclick="AT='${k}';render()">${l}</button>`;return `<div class="seg">${b('rev','營收')}${b('exp','支出')}</div>`+(AT=='rev'?addR():addE())}
-function addR(){const d=TMP.rd||td(),r=D.rev[d]||{};return `<div class="c"><label>日期<input type="date" id="rd" value="${d}" onchange="TMP.rd=this.value;render()"></label><div class="r2"><label>早<input type="number" inputmode="numeric" id="rm" value="${r.m==null?'':r.m}"></label><label>晚<input type="number" inputmode="numeric" id="rn" value="${r.n==null?'':r.n}"></label></div><label>備註<input id="rk" value="${esc(r.k)}" placeholder="例：颱風、有事休息"></label><button class="btn" onclick="saveR()">儲存營收</button>${D.rev[d]?'<p class="mu">這天已有紀錄，儲存會覆蓋。</p>':''}</div>`}
-function saveR(){const d=$('rd').value;if(!d)return;D.rev[d]={m:+$('rm').value||0,n:+$('rn').value||0,k:$('rk').value};TMP={};save();toast('營收已儲存');if(RET)back();else render()}
+function addR(){const d=TMP.rd||td(),r=D.rev[d]||{};return `<div class="c"><label>日期<input type="date" id="rd" value="${d}" onchange="TMP.rd=this.value;attCancel();ATT=attFrom(D.rev[this.value]||{});render();attLoad()"></label><div class="r2"><label>早<input type="number" inputmode="numeric" id="rm" value="${r.m==null?'':r.m}"></label><label>晚<input type="number" inputmode="numeric" id="rn" value="${r.n==null?'':r.n}"></label></div><label>備註<input id="rk" value="${esc(r.k)}" placeholder="例：颱風、有事休息"></label>${attBox()}<button class="btn" onclick="saveR()">儲存營收</button>${D.rev[d]?'<p class="mu">這天已有紀錄，儲存會覆蓋。</p>':''}</div>`}
+function saveR(){const d=$('rd').value;if(!d)return;D.rev[d]={m:+$('rm').value||0,n:+$('rn').value||0,k:$('rk').value,em:ATT.em,im:ATT.im.map(a=>a.id)};attDone();TMP={};save();toast('營收已儲存');if(RET)back();else render()}
 function addE(){const e=EID?D.exp.find(a=>a.id==EID):null,t=TMP.e||e||{d:td(),v:Object.keys(D.ven)[0],i:'',q:'',p:'',t:'',k:''},it=(D.ven[t.v]&&D.ven[t.v].i)||[];
 return `<div class="c"><label>日期<input type="date" id="ed" value="${t.d}"></label><label>廠商<select id="ev" onchange="evc()">${Object.keys(D.ven).map(v=>`<option${v==t.v?' selected':''}>${esc(v)}</option>`).join('')}</select></label>
 <label>品項（可選清單或自行輸入）<input id="ei" list="il" value="${esc(t.i)}" oninput="eic()" autocomplete="off"><datalist id="il">${it.map(x=>`<option value="${esc(x.n)}">`).join('')}</datalist></label>
 <div class="r3"><label>數量<input type="number" step="any" inputmode="decimal" id="eq" value="${t.q}" oninput="ecalc()"></label><label>單價<input type="number" step="any" inputmode="decimal" id="ep" value="${t.p}" oninput="ecalc()"></label><label>金額<input type="number" step="any" inputmode="decimal" id="et" value="${t.t}"></label></div>
-<label>備註<input id="ek" value="${esc(t.k)}"></label><button class="btn" onclick="saveE()">${e?'更新支出':'儲存支出'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
+<label>備註<input id="ek" value="${esc(t.k)}"></label>${attBox()}<button class="btn" onclick="saveE()">${e?'更新支出':'儲存支出'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
 function readE(){return{d:$('ed').value,v:$('ev').value,i:$('ei').value.trim(),q:$('eq').value,p:$('ep').value,t:$('et').value,k:$('ek').value}}
 function evc(){TMP.e=readE();TMP.e.i='';TMP.e.p='';TMP.e.t='';render()}
 function ecalc(){const q=+$('eq').value,p=+$('ep').value;if(q&&p)$('et').value=+(q*p).toFixed(2)}
@@ -186,9 +186,9 @@ return `<div class="c"><label>日期<input type="date" id="ed" value="${t.d}"></
 <label>品項（可選清單或自行輸入）<input id="ei" list="il" value="${esc(t.i)}" oninput="eic()" autocomplete="off"><datalist id="il">${it.map(x=>`<option value="${esc(x.n)}">`).join('')}</datalist></label>
 <div class="r2"><label>產品編號<input id="ec" value="${esc(t.c)}"></label><label>品名規格<input id="es" value="${esc(t.s)}"></label></div>
 <div class="r3"><label>數量<input type="number" step="any" inputmode="decimal" id="eq" value="${t.q}" oninput="ecalc()"></label><label>單價<input type="number" step="any" inputmode="decimal" id="ep" value="${t.p}" oninput="ecalc()"></label><label>含稅金額<input type="number" step="any" inputmode="decimal" id="et" value="${t.t}"></label></div>
-<label>備註<input id="ek" value="${esc(t.k)}"></label><button class="btn" onclick="saveE()">${e?'更新支出':'儲存支出'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
+<label>備註<input id="ek" value="${esc(t.k)}"></label>${attBox()}<button class="btn" onclick="saveE()">${e?'更新支出':'儲存支出'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
 function saveE(){const x=readE(),t=+x.t;if(!x.v||!x.d||!(t>0)){toast('請填日期與金額');return}
-const o={id:EID||Date.now(),d:x.d,v:x.v,i:x.i||x.v,q:x.q===''?'':+x.q,p:x.p===''?'':+x.p,t:t,k:x.k,c:x.c,s:x.s,no:x.no};
+const o={id:EID||Date.now(),d:x.d,v:x.v,i:x.i||x.v,q:x.q===''?'':+x.q,p:x.p===''?'':+x.p,t:t,k:x.k,c:x.c,s:x.s,no:x.no,em:ATT.em,im:ATT.im.map(a=>a.id)};attDone();
 if(EID){D.exp[D.exp.findIndex(a=>a.id==EID)]=o}else D.exp.push(o);
 const vn=D.ven[x.v],it=vn.i.find(a=>a.n==o.i);let chg='';
 if(it){if(o.p!==''&&o.p!=it.p){(it.h=it.h||[]).push([o.d,it.p,o.p]);it.p=o.p;chg='，單價已更新'}if(o.c&&!it.c)it.c=o.c;if(o.s&&!it.s)it.s=o.s}else vn.i.push({n:o.i,u:'',p:o.p===''?0:o.p,c:o.c,s:o.s});
@@ -214,7 +214,7 @@ return mn()+`<div class="hero"><small>${y}年${m}月　本月盈餘</small><div 
 <div class="c"><h3>廠商支出前六名</h3>${vs.map(([v,s])=>`<div class="it">${ico(catOf(v))}<div class="t"><b>${esc(v)}</b><small>${pc(s,e)}</small></div><div class="a">${f(s)}</div></div>`).join('')||'<p class="mu">本月尚無支出</p>'}</div>`}
 function list(){const{R,E}=agg(),src=FT=='rev'?Object.keys(D.rev):FT=='exp'?D.exp.map(e=>e.d):[...Object.keys(D.rev),...D.exp.map(e=>e.d)],ds=[...new Set(src)].filter(k=>k.startsWith(YM)).sort().reverse();
 const ch=[['all','全部'],['rev','營收'],['exp','支出']].map(([k,l])=>`<button class="${FT==k?'on':''}" onclick="FT='${k}';render()">${l}</button>`).join('');
-return mn()+`<div class="seg">${ch}</div>`+(ds.map(d=>{const r=D.rev[d],es=D.exp.filter(x=>x.d==d),net=(R[d]||0)-(E[d]||0);return `<div class="dh2"><span>${d.slice(5)}　週${wd(d)}</span><span class="${net<0?'bd':'ok'}">當日 ${f(net)}</span></div><div class="c">`+(FT!='exp'&&r?`<div class="it" onclick="editR('${d}')"><span class="ic" style="background:#05966926">💰</span><div class="t"><b>營收</b><small>早 ${f(r.m||0)}・晚 ${f(r.n||0)}${r.k?'・'+esc(r.k):''}</small></div><div class="a ok">+${f((+r.m||0)+(+r.n||0))}</div></div>`:'')+(FT!='rev'?es.map(x=>`<div class="it" onclick="editE(${x.id})">${ico(catOf(x.v))}<div class="t"><b>${esc(x.i)}</b><small>${esc(x.v)}${x.no?'・單號 '+esc(x.no):''}${x.q!==''&&x.q!=null?'・'+x.q+'×'+x.p:''}</small></div><div class="a bd">-${f(x.t)}</div></div>`).join(''):'')+'</div>'}).join('')||'<p class="mu">這個月還沒有紀錄</p>')}
+return mn()+`<div class="seg">${ch}</div>`+(ds.map(d=>{const r=D.rev[d],es=D.exp.filter(x=>x.d==d),net=(R[d]||0)-(E[d]||0);return `<div class="dh2"><span>${d.slice(5)}　週${wd(d)}</span><span class="${net<0?'bd':'ok'}">當日 ${f(net)}</span></div><div class="c">`+(FT!='exp'&&r?`<div class="it" onclick="editR('${d}')"><span class="ic" style="background:#05966926">💰</span><div class="t"><b>${r.em?r.em+' ':''}營收${r.im&&r.im.length?' 📷':''}</b><small>早 ${f(r.m||0)}・晚 ${f(r.n||0)}${r.k?'・'+esc(r.k):''}</small></div><div class="a ok">+${f((+r.m||0)+(+r.n||0))}</div></div>`:'')+(FT!='rev'?es.map(x=>`<div class="it" onclick="editE(${x.id})">${ico(catOf(x.v))}<div class="t"><b>${x.em?x.em+' ':''}${esc(x.i)}${x.im&&x.im.length?' 📷':''}</b><small>${esc(x.v)}${x.no?'・單號 '+esc(x.no):''}${x.q!==''&&x.q!=null?'・'+x.q+'×'+x.p:''}</small></div><div class="a bd">-${f(x.t)}</div></div>`).join(''):'')+'</div>'}).join('')||'<p class="mu">這個月還沒有紀錄</p>')}
 let ORD={};
 const og=()=>ORD[VN]||(ORD[VN]={d:td(),no:'',k:'',q:{}});
 function sf(i,k,val){D.ven[VN].i[i][k]=val.trim();save();toast('已更新')}
@@ -237,7 +237,7 @@ function vlog(v,all,mo,ms){const pv={},fl={};
 for(const e of [...all].reverse()){const r=[];if(e.q!==''&&e.p!==''&&e.q!=null&&e.p!=null&&Math.abs(e.q*e.p-e.t)>0.5)r.push(['bd','金額不符：數量×單價應為 '+f(e.q*e.p)]);if(/差額/.test(e.i))r.push(['bd','依總表補入，無明細，請對照單據']);if(e.p!==''&&e.p!=null){if(pv[e.i]!=null&&pv[e.i]!=e.p)r.push(['mu','單價與上次不同：'+pv[e.i]+' → '+e.p]);pv[e.i]=e.p}fl[e.id]=r}
 const nb=mo.filter(e=>fl[e.id].length).length,rows=mo.filter(e=>(!VK||[e.no,e.c,e.i,e.s].join(' ').includes(VK))&&(VF=='all'||fl[e.id].length)).sort((a,b)=>a.d.localeCompare(b.d)),days=[...new Set(rows.map(e=>e.d))],un=n=>((v.i.find(x=>x.n==n)||{}).u||'');
 return `<div class="seg"><button class="${VF=='all'?'on':''}" onclick="VF='all';render()">全部（${mo.length}筆）</button><button class="${VF=='all'?'':'on'}" onclick="VF='bad';render()">需核對（${nb}筆）</button></div><label>搜尋單號、產品編號或品名<input value="${esc(VK)}" placeholder="輸入後按 Enter" onchange="VK=this.value.trim();render()"></label><div class="c"><div class="dh" style="border:0;padding:0"><b>${+YM.slice(5)}月進貨合計</b><b>${f(rows.reduce((a,e)=>a+e.t,0))}</b></div><small class="mu">${rows.length}筆・${days.length}天　點任一筆可修改</small></div>`+
-(days.map(d=>{const es=rows.filter(e=>e.d==d);return `<div class="dh2"><span>${d.slice(5)}　週${wd(d)}</span><span>當日 ${f(es.reduce((a,e)=>a+e.t,0))}</span></div><div class="c">${es.map(e=>`<div class="en" onclick="editE(${e.id})"><div class="e1"><b>${esc(e.i)}</b><b>${f(e.t)}</b></div>${e.s?`<div class="e2">${esc(e.s)}</div>`:''}<div class="e3"><span>產品編號 <b>${esc(e.c)||'—'}</b></span><span>單號 <b>${esc(e.no)||'—'}</b></span>${e.q!==''&&e.q!=null?`<span>數量 <b>${esc(e.q)}${esc(un(e.i))}</b></span><span>單價 <b>$${esc(e.p)}</b></span>`:''}</div>${fl[e.id].map(r=>`<div class="fl ${r[0]=='bd'?'bd':'mu'}">${r[0]=='bd'?'⚠ ':''}${r[1]}</div>`).join('')}</div>`).join('')}</div>`}).join('')||'<p class="mu">沒有符合的紀錄</p>')}
+(days.map(d=>{const es=rows.filter(e=>e.d==d);return `<div class="dh2"><span>${d.slice(5)}　週${wd(d)}</span><span>當日 ${f(es.reduce((a,e)=>a+e.t,0))}</span></div><div class="c">${es.map(e=>`<div class="en" onclick="editE(${e.id})"><div class="e1"><b>${e.em?e.em+' ':''}${esc(e.i)}${e.im&&e.im.length?' 📷':''}</b><b>${f(e.t)}</b></div>${e.s?`<div class="e2">${esc(e.s)}</div>`:''}<div class="e3"><span>產品編號 <b>${esc(e.c)||'—'}</b></span><span>單號 <b>${esc(e.no)||'—'}</b></span>${e.q!==''&&e.q!=null?`<span>數量 <b>${esc(e.q)}${esc(un(e.i))}</b></span><span>單價 <b>$${esc(e.p)}</b></span>`:''}</div>${fl[e.id].map(r=>`<div class="fl ${r[0]=='bd'?'bd':'mu'}">${r[0]=='bd'?'⚠ ':''}${r[1]}</div>`).join('')}</div>`).join('')}</div>`}).join('')||'<p class="mu">沒有符合的紀錄</p>')}
 let RET=null;
 function topbar(){let t='';if(V=='add'&&RET)t='back()';else if(V=='ven'&&VN)t='VN=null;render();scrollTo(0,0)';return t?`<button class="bk" onclick="${t}">‹ 返回</button>`:''}
 function back(){const r=RET;RET=null;EID=null;TMP={};if(!r){go('home');return}V=r.V;VN=r.VN;VT=r.VT;render();scrollTo(0,r.y)}
@@ -277,7 +277,7 @@ else{const q=nn(r[M.q]),p=nn(r[M.p]);let t=nn(r[M.t]);if(t==null&&q!=null&&p!=nu
 return{rev:R,exp:E,nv:[...nv]}}
 function impf(el){const fl=el.files[0];if(!fl)return;if(!window.XLSX){toast('Excel 元件載入失敗，請重新整理');return}const r=new FileReader();r.onload=()=>{try{IMP=parseWB(XLSX.read(r.result,{type:'array'}));if(!IMP.rev.length&&!IMP.exp.length){IMP=null;toast('找不到可匯入的資料，請確認欄位標題')}render()}catch(e){IMP=null;toast('無法讀取這個檔案')}};r.readAsArrayBuffer(fl)}
 function impok(){const I=IMP,key=e=>[e.d,e.v,e.i,e.q,e.t,e.no].join('|'),ex=new Set(D.exp.map(key));let a=0,id=Date.now();
-I.rev.forEach(([d,m,n,k])=>{D.rev[d]={m:m,n:n,k:k}});
+I.rev.forEach(([d,m,n,k])=>{D.rev[d]=Object.assign({},D.rev[d],{m:m,n:n,k:k})});
 I.exp.forEach(e=>{if(!D.ven[e.v])D.ven[e.v]={c:'其他',i:[]};const it=D.ven[e.v].i.find(x=>x.n==e.i);if(!it)D.ven[e.v].i.push({n:e.i,u:'',p:e.p===''?0:e.p,c:e.c,s:e.s});else{if(!it.c&&e.c)it.c=e.c;if(!it.s&&e.s)it.s=e.s}e.id=id++;if(!ex.has(key(e))){D.exp.push(e);ex.add(key(e));a++}});
 IMP=null;save();toast('已匯入營收 '+I.rev.length+' 天、進貨 '+a+' 筆');render()}
 async function stfSet(id,role){try{await DB.doc('staff/'+id).set({role:role});STAFF[id]={role:role};toast('已更新');render()}catch(e){toast('無法更新：'+((e&&e.code)||'權限不足'))}}
@@ -371,9 +371,9 @@ addE=function(){const e=EID?D.exp.find(a=>a.id==EID):null;if(e)ET=catOf(e.v)=='�
 const b=(k,l)=>`<button class="${ET==k?'on':''}" onclick="ET='${k}';render()">${l}</button>`;
 return (e?'':`<div class="seg">${b('v','廠商進貨')}${b('m','雜費支出')}</div>`)+(ET=='m'?addM(e):_ae())};
 function addM(e){const t=TMP.m||e||{d:td(),v:'',i:'',t:'',k:'',no:''},opts=Object.keys(D.ven).filter(v=>D.ven[v].c=='雜費'),sel=t.v||opts[0]||'';
-return `<div class="c"><label>日期<input type="date" id="md" value="${t.d}"></label><label>雜費項目<select id="mv">${opts.map(v=>`<option${v==sel?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>或新增項目名稱（選填）<input id="mn" placeholder="例：冷氣清洗"></label><label>說明（選填）<input id="mi" value="${esc(t.i==t.v?'':t.i)}" placeholder="例：10月電費"></label><div class="r2"><label>金額<input type="number" step="any" inputmode="decimal" id="mt" value="${t.t}"></label><label>單號／發票<input id="mo" value="${esc(t.no)}"></label></div><label>備註<input id="mk" value="${esc(t.k)}"></label><button class="btn" onclick="saveM()">${e?'更新雜費':'儲存雜費'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
+return `<div class="c"><label>日期<input type="date" id="md" value="${t.d}"></label><label>雜費項目<select id="mv">${opts.map(v=>`<option${v==sel?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>或新增項目名稱（選填）<input id="mn" placeholder="例：冷氣清洗"></label><label>說明（選填）<input id="mi" value="${esc(t.i==t.v?'':t.i)}" placeholder="例：10月電費"></label><div class="r2"><label>金額<input type="number" step="any" inputmode="decimal" id="mt" value="${t.t}"></label><label>單號／發票<input id="mo" value="${esc(t.no)}"></label></div><label>備註<input id="mk" value="${esc(t.k)}"></label>${attBox()}<button class="btn" onclick="saveM()">${e?'更新雜費':'儲存雜費'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
 function saveM(){const v=$('mn').value.trim()||$('mv').value,t=+$('mt').value,d=$('md').value;if(!d||!(t>0)||!v){toast('請填日期、項目與金額');return}
-if(!D.ven[v])D.ven[v]={c:'雜費',i:[]};const o={id:EID||Date.now(),d:d,v:v,i:$('mi').value.trim()||v,q:'',p:'',t:t,k:$('mk').value,c:'',s:'',no:$('mo').value.trim()};
+if(!D.ven[v])D.ven[v]={c:'雜費',i:[]};const o={id:EID||Date.now(),d:d,v:v,i:$('mi').value.trim()||v,q:'',p:'',t:t,k:$('mk').value,c:'',s:'',no:$('mo').value.trim(),em:ATT.em,im:ATT.im.map(a=>a.id)};attDone();
 if(EID){D.exp[D.exp.findIndex(a=>a.id==EID)]=o}else D.exp.push(o);EID=null;TMP={};save();toast('雜費已儲存');if(RET)back();else render()}
 CATS.splice(CATS.indexOf('其他'),0,'薪資');CE['薪資']=['','#8b5cf6'];
 const SALT=['月薪','時薪','加班費','獎金','勞健保','其他'];
@@ -381,9 +381,9 @@ addE=function(){const e=EID?D.exp.find(a=>a.id==EID):null;if(e){const c=catOf(e.
 const b=(k,l)=>`<button class="${ET==k?'on':''}" onclick="ET='${k}';render()">${l}</button>`;
 return (e?'':`<div class="seg">${b('v','廠商進貨')}${b('m','雜費')}${ROLE=='admin'?b('s','薪資'):''}</div>`)+(ET=='m'?addM(e):ET=='s'?addS(e):_ae())};
 function addS(e){const t=e||{d:td(),v:'',i:'月薪',t:'',k:''},emp=Object.keys(D.ven).filter(v=>D.ven[v].c=='薪資'),sel=t.v||emp[0]||'';
-return `<div class="c"><label>發薪日期<input type="date" id="sd" value="${t.d}"></label><label>員工${emp.length?'':'（目前沒有員工，請在下方輸入姓名）'}<select id="sv">${emp.map(v=>`<option${v==sel?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>或新增員工姓名（選填）<input id="sn" placeholder="例：王小明"></label><div class="r2"><label>薪資項目<select id="si">${SALT.map(x=>`<option${x==t.i?' selected':''}>${x}</option>`).join('')}</select></label><label>金額<input type="number" step="any" inputmode="decimal" id="st" value="${t.t}"></label></div><label>備註（例：10月份）<input id="sk" value="${esc(t.k)}"></label><button class="btn" onclick="saveS()">${e?'更新薪資':'儲存薪資'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
+return `<div class="c"><label>發薪日期<input type="date" id="sd" value="${t.d}"></label><label>員工${emp.length?'':'（目前沒有員工，請在下方輸入姓名）'}<select id="sv">${emp.map(v=>`<option${v==sel?' selected':''}>${esc(v)}</option>`).join('')}</select></label><label>或新增員工姓名（選填）<input id="sn" placeholder="例：王小明"></label><div class="r2"><label>薪資項目<select id="si">${SALT.map(x=>`<option${x==t.i?' selected':''}>${x}</option>`).join('')}</select></label><label>金額<input type="number" step="any" inputmode="decimal" id="st" value="${t.t}"></label></div><label>備註（例：10月份）<input id="sk" value="${esc(t.k)}"></label>${attBox()}<button class="btn" onclick="saveS()">${e?'更新薪資':'儲存薪資'}</button>${e?'<button class="bt2" onclick="two(this,delE)">刪除</button>':''}</div>`}
 function saveS(){const v=$('sn').value.trim()||$('sv').value,t=+$('st').value,d=$('sd').value;if(!d||!(t>0)||!v){toast('請填日期、員工與金額');return}
-if(!D.ven[v])D.ven[v]={c:'薪資',i:[]};const o={id:EID||Date.now(),d:d,v:v,i:$('si').value,q:'',p:'',t:t,k:$('sk').value,c:'',s:'',no:''};
+if(!D.ven[v])D.ven[v]={c:'薪資',i:[]};const o={id:EID||Date.now(),d:d,v:v,i:$('si').value,q:'',p:'',t:t,k:$('sk').value,c:'',s:'',no:'',em:ATT.em,im:ATT.im.map(a=>a.id)};attDone();
 if(EID){D.exp[D.exp.findIndex(a=>a.id==EID)]=o}else D.exp.push(o);EID=null;TMP={};save();toast('薪資已儲存');if(RET)back();else render()}
 let MGT='v';
 const MGN={v:'廠商',m:'雜費項目',s:'薪資員工'};
@@ -481,7 +481,7 @@ const parseGen=parseWB;
 parseWB=function(wb){return wb.SheetNames.some(s=>/每月營收明細|總表/.test(s))?parseMonthly(wb):parseGen(wb)};
 impok=function(){const I=IMP,key=e=>[e.d,e.v,e.i,e.q,e.t,e.no].join('|');let rem=0,a=0,id=Date.now();
 const sc=new Set(I.scope||[]),rp=$('imp_rep');if(sc.size&&rp&&rp.checked){const n0=D.exp.length;D.exp=D.exp.filter(e=>!sc.has(e.v+'|'+e.d.slice(0,7)));rem=n0-D.exp.length}
-I.rev.forEach(([d,m,n,k])=>{D.rev[d]={m:m,n:n,k:k}});
+I.rev.forEach(([d,m,n,k])=>{D.rev[d]=Object.assign({},D.rev[d],{m:m,n:n,k:k})});
 const ens=v=>{if(!D.ven[v])D.ven[v]={c:(I.cats&&I.cats[v])||'其他',i:[]};return D.ven[v]};
 for(const v in (I.items||{})){const t=ens(v);I.items[v].forEach(it=>{const x=t.i.find(q=>q.n==it.n);if(!x)t.i.push({n:it.n,u:it.u||'',p:it.p||0,c:it.c||'',s:it.s||''});else{if(!x.u&&it.u)x.u=it.u;if(!x.c&&it.c)x.c=it.c;if(!x.s&&it.s)x.s=it.s;if(!x.p&&it.p)x.p=it.p}})}
 const ex=new Set(D.exp.map(key));I.exp.forEach(e=>{ens(e.v);e.id=id++;if(!ex.has(key(e))){D.exp.push(e);ex.add(key(e));a++}});
@@ -510,5 +510,30 @@ const _go0=go;go=function(v){SP=null;_go0(v)};
 addE=function(){const e=EID?D.exp.find(a=>a.id==EID):null;if(e){const c=catOf(e.v);ET=c=='雜費'?'m':c=='薪資'?'s':'v'}if(ROLE!='admin'&&(ET=='s'||ET=='f'))ET='v';
 const b=(k,l)=>`<button class="${ET==k?'on':''}" onclick="ET='${k}';render()">${l}</button>`;
 return (e?'':`<div class="seg">${b('v','廠商進貨')}${b('m','雜費')}${ROLE=='admin'?b('s','薪資')+b('f','固定扣款'):''}</div>`)+(ET=='m'?addM(e):ET=='s'?addS(e):ET=='f'&&!e?rlCard():_ae())};
+const EMS=['🧾','🛒','🥬','🥩','🦐','🍢','🔥','💧','⚡','🏠','💰','⭐','⚠️','✅','❗'];
+const attNew=()=>({em:'',im:[],del:[],busy:false});
+let ATT=attNew();
+const attFrom=e=>({em:(e&&e.em)||'',im:((e&&e.im)||[]).map(id=>({id:id,url:null,saved:true})),del:[],busy:false});
+function attHtml(){const em=EMS.map(x=>`<button type="button" class="x" style="font-size:22px;padding:4px 7px;border-radius:10px;${ATT.em==x?'background:var(--ac)':''}" data-e="${x}" onclick="attEm(this.dataset.e)">${x}</button>`).join('');
+return `<h3 style="margin-top:6px">表情符號／照片（選填）</h3><div style="display:flex;flex-wrap:wrap;gap:2px;margin-bottom:6px">${em}</div><label>或自己輸入表情符號<input value="${esc(ATT.em&&!EMS.includes(ATT.em)?ATT.em:'')}" maxlength="8" onchange="attEm(this.value.trim(),1)" placeholder="例：🍜"></label><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">${ATT.im.map((a,i)=>`<div style="position:relative"><img src="${a.url||''}" style="width:72px;height:72px;object-fit:cover;border-radius:10px;background:var(--bg)" onclick="imgView(${i})"><button type="button" onclick="attDel(${i})" style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:var(--bd);color:#fff;font-size:14px;padding:0">×</button></div>`).join('')}${ATT.im.length<3?`<label style="width:72px;height:72px;margin:0;border:1.5px dashed var(--mu);border-radius:10px;display:grid;place-items:center;font-size:12px;text-align:center">＋ 照片<input type="file" accept="image/*" multiple style="display:none" onchange="attPick(this)"></label>`:''}</div>${ATT.busy?'<small class="mu">照片處理中…</small>':''}`}
+const attBox=()=>`<div id="att">${attHtml()}</div>`;
+function attRender(){const a=$('att');if(a)a.innerHTML=attHtml()}
+function attEm(x,custom){ATT.em=(!custom&&ATT.em==x)?'':x;attRender()}
+function shrink(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;const m=900;if(Math.max(w,h)>m){const s=m/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);let q=.65,u=c.toDataURL('image/jpeg',q);while(u.length>330000&&q>.3){q-=.1;u=c.toDataURL('image/jpeg',q)}res(u)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+async function attPick(el){const fs=[...el.files].slice(0,3-ATT.im.length);el.value='';if(!fs.length)return;ATT.busy=true;attRender();
+for(const f of fs){try{const u=await shrink(f),id='i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);await DB.doc('img/'+id).set({d:u});ATT.im.push({id:id,url:u,saved:false})}catch(e){toast(/permission/.test((e&&e.code)||'')?'無法上傳照片：請先到 Firestore 規則加入 img 的權限':'照片處理失敗')}}
+ATT.busy=false;attRender()}
+function attDel(i){const a=ATT.im[i];ATT.im.splice(i,1);if(a.saved)ATT.del.push(a.id);else DB.doc('img/'+a.id).delete().catch(()=>{});attRender()}
+function attDone(){ATT.del.forEach(id=>DB.doc('img/'+id).delete().catch(()=>{}));ATT=attNew()}
+function attCancel(){ATT.im.filter(a=>!a.saved).forEach(a=>DB.doc('img/'+a.id).delete().catch(()=>{}));ATT=attNew()}
+async function attLoad(){for(const a of ATT.im){if(!a.url){try{const s=await DB.doc('img/'+a.id).get();a.url=s.exists?s.data().d:''}catch(e){a.url=''}}}attRender()}
+function imgView(i){const u=ATT.im[i]&&ATT.im[i].url;if(!u)return;const o=document.createElement('div');o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;display:grid;place-items:center';o.innerHTML='<img style="max-width:96%;max-height:92%" src="'+u+'">';o.onclick=()=>o.remove();document.body.appendChild(o)}
+const _go1=go;go=function(v){attCancel();_go1(v)};
+const _bk0=back;back=function(){attCancel();_bk0()};
+const _nr0=newRec;newRec=function(t){attCancel();_nr0(t)};
+const _va0=vAdd;vAdd=function(){attCancel();_va0()};
+const _ee0=editE;editE=function(id){attCancel();ATT=attFrom(D.exp.find(a=>a.id==id));_ee0(id);attLoad()};
+const _er0=editR;editR=function(d){attCancel();ATT=attFrom(D.rev[d]);_er0(d);attLoad()};
+const _de0=delE;delE=function(){const e=D.exp.find(a=>a.id==EID);if(e&&e.im)e.im.forEach(id=>DB.doc('img/'+id).delete().catch(()=>{}));_de0()};
 boot();
 </script></body></html>
